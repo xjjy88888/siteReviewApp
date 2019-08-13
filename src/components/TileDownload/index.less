@@ -1,0 +1,50 @@
+@blue-color: #108ee9;
+@red-color: #f00;
+@black-color: #000;
+@gray-color: #888;
+
+.status {
+  float: right;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+.status-deleting {
+  .status();
+  color: @black-color;
+}
+
+.status-downloading {
+  .status();
+  color: @blue-color;
+}
+
+.status-paused {
+  .status();
+  color: @red-color;
+}
+
+.status-downloaded {
+  .status();
+  color: @gray-color;
+}
+
+.slider {
+  height: 5px;
+  opacity: 0.8;
+}
+
+.arrow {
+  color: @gray-color;
+}
+
+.button {
+  width: 100px;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.hide {
+  display: none;
+}
