@@ -4,8 +4,8 @@ const arcgisVectorUrl =
 const arcgisImageUrl =
   'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer';
 
-// const domain = `https://www.zkygis.cn/stbc/`;//正式
-const domain = `http://183.6.178.124:8001/stbct/`; //测试
+  const domain = `https://www.zkygis.cn/stbc/`;//正式
+// const domain = `http://183.6.178.124:8001/stbct/`; //测试
 
 const config = {
   domain: domain,

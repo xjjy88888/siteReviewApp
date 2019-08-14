@@ -59,9 +59,12 @@ export default class Login extends PureComponent {
           <div className={styles.desc}>生产建设项目水土保持信息化监管系统</div>
           <div className={styles.title}>
             <span className={classNames('iconfont', 'icon-region-logo', styles.logo)} />
-            <span>现场复核{config.domain === 'http://www.zkygis.cn/stbct/' ? '测试' : ''}</span>
+            <span>现场复核</span>
           </div>
-          <div className={styles.appVersionNumber}>V{appVersionNumber}</div>
+          <div className={styles.appVersionNumber}>
+            V{appVersionNumber}
+            {config.domain === 'https://www.zkygis.cn/stbc/' ? '' : ' beta'}
+          </div>
         </div>
         <div className={styles.center}>
           <WhiteSpace size="lg" />
