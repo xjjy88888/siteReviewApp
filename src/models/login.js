@@ -1,7 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { Toast } from 'antd-mobile';
-import { getVersionNumber } from '@/utils/version.js';
-import { login } from '../services/httpApi';
+import { login, versionApi } from '../services/httpApi';
 import {
   login as localLogin,
   saveUserInfo,
@@ -9,6 +8,7 @@ import {
   closeUserDB,
   getLastLandUser,
 } from '../services/localApi';
+import { getVersionNumber } from '@/utils/version.js';
 
 // 登录成功
 function* onLoginSuccess({ call, put }, { isOnline, user }) {
@@ -69,6 +69,9 @@ export default {
 
     // 默认不记住用户密码
     isReserve: false,
+
+    localVersion: '1.0.0',
+    onlineVersion: '1.0.0',
   },
 
   subscriptions: {
@@ -77,8 +80,18 @@ export default {
   },
 
   effects: {
+    *getVersion({ payload, callback }, { call, put }) {
+      const localVersion = yield call(getVersionNumber);
+      const data = yield call(versionApi);
+      console.log(data);
+      if (callback) callback(localVersion, data[`现场复核`]);
+      yield put({
+        type: 'save',
+        payload: { localVersion, onlineVersion: data[`现场复核`].v },
+      });
+    },
+
     // 获取应用版本号及上次登陆的用户信息
-    // eslint-disable-next-line
     *getAppVersionNumberandUser({ payload }, { call, put }) {
       const appVersionNumber = yield call(getVersionNumber);
       const [lastLandUser] = yield call(getLastLandUser);

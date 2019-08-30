@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { WhiteSpace, InputItem, Button, Switch, List } from 'antd-mobile';
+import { WhiteSpace, InputItem, Button, Switch, List, Modal } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import classNames from 'classnames';
 import styles from './Login.less';
@@ -20,10 +20,35 @@ export default class Login extends PureComponent {
       type: 'login/logout',
     });
 
-    this.props.dispatch({
-      type: 'login/getAppVersionNumberandUser',
-    });
+    this.getVersion();
   }
+
+  getVersion = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'login/getVersion',
+      callback: (v1, v2) => {
+        // console.log(v1, v2);
+        if (v1 !== v2.v) {
+          if (v2.must) {
+            window.open(config.downloadApkUrl);
+          } else {
+            Modal.alert('检查更新', `当前版本为${v1}，最新版本为${v2.v}，是否去更新？`, [
+              {
+                text: '否',
+              },
+              {
+                text: '是',
+                onPress: () => {
+                  window.open(config.downloadApkUrl);
+                },
+              },
+            ]);
+          }
+        }
+      },
+    });
+  };
 
   hasErrors = fieldsError => {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -49,10 +74,11 @@ export default class Login extends PureComponent {
   render() {
     const {
       submitting,
-      login: { appVersionNumber, user, isReserve },
+      login: { user, isReserve, localVersion, onlineVersion },
     } = this.props;
     const { getFieldProps, getFieldsError } = this.props.form;
     const { Item } = List;
+    console.log('user', user);
     return (
       <div className={styles.main}>
         <div className={styles.top}>
@@ -61,10 +87,7 @@ export default class Login extends PureComponent {
             <span className={classNames('iconfont', 'icon-region-logo', styles.logo)} />
             <span>现场复核</span>
           </div>
-          <div className={styles.appVersionNumber}>
-            V{appVersionNumber}
-            {config.domain === 'https://www.zkygis.cn/stbc/' ? '' : ' beta'}
-          </div>
+          <div className={styles.appVersionNumber}>V{localVersion}</div>
         </div>
         <div className={styles.center}>
           <WhiteSpace size="lg" />

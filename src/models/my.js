@@ -1,6 +1,5 @@
 import { routerRedux } from 'dva/router';
 import { queryInstruction } from '../services/localApi';
-// import { getInstruction } from '../services/httpApi';
 import config from '../config';
 
 const initialState = {

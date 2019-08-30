@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Toast, Icon, NavBar, WhiteSpace, Grid, List, Button } from 'antd-mobile';
+import { Toast, Icon, NavBar, WhiteSpace, Grid, List, Button, Modal } from 'antd-mobile';
 import PropTypes from 'prop-types';
 import { connect } from 'dva';
 import TouchFeedback from 'rmc-feedback';
@@ -7,6 +7,7 @@ import { getVersionNumber } from '@/utils/version.js';
 import NavContentContainer from '../../components/NavContentContainer';
 import PanelContentContainer from '../../components/PanelContentContainer';
 import styles from './index.less';
+import config from '../../config';
 
 @connect(({ login }) => ({
   login,
@@ -18,6 +19,37 @@ export default class My extends PureComponent {
 
   static propTypes = {
     hasGoBack: PropTypes.bool,
+  };
+
+  componentDidMount() {
+    this.getVersion();
+  }
+
+  getVersion = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'login/getVersion',
+      callback: (v1, v2) => {
+        // console.log(v1, v2);
+        if (v1 !== v2.v) {
+          if (v2.must) {
+            window.open(config.downloadApkUrl);
+          } else {
+            Modal.alert('检查更新', `当前版本为${v1}，最新版本为${v2.v}，是否去更新？`, [
+              {
+                text: '否',
+              },
+              {
+                text: '是',
+                onPress: () => {
+                  window.open(config.downloadApkUrl);
+                },
+              },
+            ]);
+          }
+        }
+      },
+    });
   };
 
   onLeftClick = () => {
@@ -55,6 +87,9 @@ export default class My extends PureComponent {
 
   // 列表项单击处理事件
   onItemClick = item => {
+    const {
+      login: { localVersion, onlineVersion },
+    } = this.props;
     switch (item.text) {
       case '建设单位管理':
         this.props.dispatch({
@@ -62,10 +97,31 @@ export default class My extends PureComponent {
           payload: {},
         });
         break;
-      case '版本说明':
+      case '当前版本':
         getVersionNumber().then(version => {
           Toast.info(`当前版本：${version}`, 1);
         });
+        break;
+      case '检查更新':
+        if (onlineVersion !== localVersion) {
+          Modal.alert(
+            '检查更新',
+            `当前版本为${localVersion}，最新版本为${onlineVersion}，是否去更新？`,
+            [
+              {
+                text: '否',
+              },
+              {
+                text: '是',
+                onPress: () => {
+                  window.open(config.downloadApkUrl, '_self');
+                },
+              },
+            ]
+          );
+        } else {
+          Toast.info('当前已是最新版本', 3);
+        }
         break;
       case '使用说明':
         this.props.dispatch({
@@ -107,15 +163,16 @@ export default class My extends PureComponent {
         },
       ],
       [
-        // {
-        //   text: '缓存清理',
-        // },
         {
-          text: '版本说明',
+          text: '当前版本',
         },
-        // {
-        //   text: '检查更新',
-        // },
+      ],
+      [
+        {
+          text: '检查更新',
+        },
+      ],
+      [
         {
           text: '使用说明',
         },
@@ -126,6 +183,8 @@ export default class My extends PureComponent {
     const {
       hasGoBack,
       login: {
+        localVersion,
+        onlineVersion,
         user: { trueName, userName },
       },
     } = this.props;
@@ -180,10 +239,17 @@ export default class My extends PureComponent {
                   {items.map(item => (
                     <List.Item
                       arrow="horizontal"
+                      extra={
+                        item.text === '当前版本'
+                          ? localVersion
+                          : item.text === '检查更新'
+                          ? onlineVersion
+                          : ''
+                      }
                       onClick={() => this.onItemClick(item)}
                       key={item.text}
                     >
-                      <div className={styles['list-item-text']}>{item.text}</div>
+                      <div style={{ fontSize: 14 }}>{item.text}</div>
                     </List.Item>
                   ))}
                 </List>

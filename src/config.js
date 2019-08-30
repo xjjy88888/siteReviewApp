@@ -1,11 +1,12 @@
+const isBeta = true;
+
 const myOnlineImageUrl = 'http://www.stbcjg.cn/BasemapService/rest/image/latest';
 const arcgisVectorUrl =
   'http://cache1.arcgisonline.cn/arcgis/rest/services/ChinaOnlineCommunity/MapServer';
 const arcgisImageUrl =
   'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer';
 
-  // const domain = `https://www.zkygis.cn/stbc/`;//正式
-const domain = `http://183.6.178.124:8001/stbct/`; //测试
+const domain = isBeta ? `http://183.6.178.124:8001/stbct/` : `https://www.zkygis.cn/stbc/`;
 
 const config = {
   domain: domain,
@@ -78,6 +79,12 @@ const config = {
       maxZoom: 18,
     },
   ],
+
+  // 版本
+  versionUrl: `http://183.6.178.124:8001/apk/version.json`,
+
+  // 下载app
+  downloadApkUrl: `http://183.6.178.124:8001/apk/siteReview${isBeta ? '_beta' : ''}.apk`,
 
   // 登录
   loginUrl: `${domain}api/TokenAuth/Authenticate`,

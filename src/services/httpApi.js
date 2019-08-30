@@ -2,6 +2,23 @@ import CryptoJS from 'crypto-js';
 import request, { agsRequest } from '../utils/request';
 import config from '../config';
 import { dateFormat, accessToken } from '../utils/util';
+import jQuery from 'jquery';
+
+// 版本
+export async function versionApi() {
+  return new Promise((resolve, reject) => {
+    jQuery.ajax({
+      url: config.versionUrl,
+      cache: false,
+      success: v => {
+        resolve(v);
+      },
+      error: v => {
+        reject(v);
+      },
+    });
+  });
+}
 
 // 登录
 // export async function login(params) {

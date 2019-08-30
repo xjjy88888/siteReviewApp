@@ -574,6 +574,7 @@ export default class Map extends React.Component {
         fillColor: SPOT_FILL_COLOR,
         fill: true,
       },
+      isEdit: true,
       HighLightType:5
     });
     this.otherBoundSpotVGLayer = otherBoundSpotVGLayer;
@@ -604,6 +605,7 @@ export default class Map extends React.Component {
         fillColor: PROJECT_FILL_COLOR,
         fill: true,
       },
+      isEdit: true,
       HighLightType:7
     });
     this.otherProjectVGLayer = otherProjectVGLayer;
@@ -657,7 +659,9 @@ export default class Map extends React.Component {
       unBoundSpotLayerGroupFinished,
       selfBoundSpotLayerGroupUnFinished,
       selfBoundSpotLayerGroupFinished,
-      selfProjectLayerGroup
+      otherBoundSpotLayerGroup,
+      selfProjectLayerGroup,
+      otherProjectLayerGroup
     } = this;
     const {
       mapDefault: { center, zoom },
@@ -678,7 +682,9 @@ export default class Map extends React.Component {
         unBoundSpotLayerGroupFinished,
         selfBoundSpotLayerGroupUnFinished,
         selfBoundSpotLayerGroupFinished,
-        selfProjectLayerGroup
+        otherBoundSpotLayerGroup,
+        selfProjectLayerGroup,
+        otherProjectLayerGroup
 
       ],
     });
