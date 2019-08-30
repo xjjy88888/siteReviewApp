@@ -1,4 +1,4 @@
-const isBeta = true;
+const isBeta = false;
 
 const myOnlineImageUrl = 'http://www.stbcjg.cn/BasemapService/rest/image/latest';
 const arcgisVectorUrl =

@@ -151,6 +151,16 @@ export default {
             trueName: result.displayName,
             userName: payload.username,
           };
+          localStorage.setItem(
+            'login',
+            payload.isReserve
+              ? JSON.stringify(payload)
+              : JSON.stringify({
+                  username: '',
+                  password: '',
+                  isReserve: false,
+                })
+          );
           localStorage.setItem('user', JSON.stringify(result));
           yield call(onLoginSuccess, { call, put }, { isOnline: true, user: loginUser });
         }

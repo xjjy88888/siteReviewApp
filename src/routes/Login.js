@@ -78,7 +78,17 @@ export default class Login extends PureComponent {
     } = this.props;
     const { getFieldProps, getFieldsError } = this.props.form;
     const { Item } = List;
-    console.log('user', user);
+
+    const loginStr =
+      localStorage.getItem('login') ||
+      JSON.stringify({
+        username: '',
+        password: '',
+        isReserve: false,
+      });
+
+    const login = JSON.parse(loginStr);
+
     return (
       <div className={styles.main}>
         <div className={styles.top}>
@@ -94,8 +104,7 @@ export default class Login extends PureComponent {
           <InputItem
             {...getFieldProps('username', {
               rules: [{ required: true }],
-              initialValue: user.userName,
-              // initialValue: '花都区办事员',
+              initialValue: login.username,
             })}
             type="text"
             placeholder="请输入用户名"
@@ -105,8 +114,7 @@ export default class Login extends PureComponent {
           <InputItem
             {...getFieldProps('password', {
               rules: [{ required: true }],
-              initialValue: user.password,
-              // initialValue: 'hd',
+              initialValue: login.password,
             })}
             type="password"
             placeholder="请输入登录密码"
@@ -116,8 +124,8 @@ export default class Login extends PureComponent {
             extra={
               <Switch
                 {...getFieldProps('isReserve', {
-                  initialValue: isReserve,
                   valuePropName: 'checked',
+                  initialValue: login.isReserve,
                 })}
                 platform="android"
               />
