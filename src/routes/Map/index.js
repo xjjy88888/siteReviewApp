@@ -232,12 +232,14 @@ export default class Map extends React.Component {
       // 自己发布的影像瓦片图层（离线）
       const myOfflineImageLayer = L.tileLayerCordova(
         `${offlineBasemap.url}/tile/{z}/{y}/{x}`,
+        // `${offlineBasemap.url}`,
         {
           minZoom: offlineBasemap.minZoom,
           maxZoom: offlineBasemap.maxZoom,
           folder: offlineBasemap.folder,
           name: offlineBasemap.name,
           debug: offlineBasemap.debug,
+          //subdomains: offlineBasemap.subdomains
         },
         () => myOfflineImageLayer.goOffline()
       );
@@ -245,17 +247,24 @@ export default class Map extends React.Component {
     } else {
       // 自己发布的影像瓦片图层（使用在线地图模拟离线地图）
       const myOfflineImageLayer = L.tileLayer(`${offlineBasemap.url}/tile/{z}/{y}/{x}`, {
+      // const myOfflineImageLayer = L.tileLayer(`${offlineBasemap.url}`, {
         minZoom: offlineBasemap.minZoom,
         maxZoom: offlineBasemap.maxZoom,
+        // subdomains: offlineBasemap.subdomains
       });
       this.myOfflineImageLayer = myOfflineImageLayer;
     }
 
     // 在线底图
     this.onlineBasemapLayers = onlineBasemaps.map(item => {
-      return L.tileLayer(`${item.url}/tile/{z}/{y}/{x}`, {
+      // return L.tileLayer(`${item.url}/tile/{z}/{y}/{x}`, {
+      //   minZoom: item.minZoom,
+      //   maxZoom: item.maxZoom,
+      // });
+      return L.tileLayer(`${item.url}`, {
         minZoom: item.minZoom,
         maxZoom: item.maxZoom,
+        subdomains: item.subdomains
       });
     });
 
@@ -659,9 +668,9 @@ export default class Map extends React.Component {
       unBoundSpotLayerGroupFinished,
       selfBoundSpotLayerGroupUnFinished,
       selfBoundSpotLayerGroupFinished,
-      otherBoundSpotLayerGroup,
+      //otherBoundSpotLayerGroup,
       selfProjectLayerGroup,
-      otherProjectLayerGroup
+      //otherProjectLayerGroup
     } = this;
     const {
       mapDefault: { center, zoom },
@@ -682,9 +691,9 @@ export default class Map extends React.Component {
         unBoundSpotLayerGroupFinished,
         selfBoundSpotLayerGroupUnFinished,
         selfBoundSpotLayerGroupFinished,
-        otherBoundSpotLayerGroup,
+        //otherBoundSpotLayerGroup,
         selfProjectLayerGroup,
-        otherProjectLayerGroup
+        //otherProjectLayerGroup
 
       ],
     });
@@ -703,18 +712,11 @@ export default class Map extends React.Component {
       unBoundSpotLayerGroupFinished,
       selfBoundSpotLayerGroupUnFinished,
       selfBoundSpotLayerGroupFinished,
-      otherBoundSpotLayerGroup,
+      //otherBoundSpotLayerGroup,
       selfProjectLayerGroup,
-      otherProjectLayerGroup
+      //otherProjectLayerGroup
     } = this;
     const { offlineBasemap, onlineBasemaps } = config;
-
-    // 底图图层
-    const baseMaps = {};
-    baseMaps[offlineBasemap.title] = myOfflineImageLayer;
-    onlineBasemaps.forEach((item, i) => {
-      baseMaps[item.title] = onlineBasemapLayers[i];
-    });
 
     // 构建图层标题及图例
     const getTitle = (text, borderColor, fillColor, isBorderDashed) => {
@@ -727,6 +729,16 @@ export default class Map extends React.Component {
     const getImageTitle = (text, imgUrl) => {
       return `<div style='display:inline-block;width:20px;height:20px;position:relative;top:4px;'><img src='${imgUrl}' style='height:20px;'/></div><span style='padding-left:1px;'>${text}</span>`;
     };
+    // 底图图层
+    const baseMaps = {};
+    // baseMaps[offlineBasemap.title] = myOfflineImageLayer;
+    // onlineBasemaps.forEach((item, i) => {
+    //   baseMaps[item.title] = onlineBasemapLayers[i];
+    // });
+    baseMaps[getImageTitle(offlineBasemap.title, offlineBasemap.picUrl)] = myOfflineImageLayer;
+    onlineBasemaps.forEach((item, i) => {
+      baseMaps[getImageTitle(item.title, item.picUrl)] = onlineBasemapLayers[i];
+    });
 
     // 专题图层
     const overlayMaps = {
@@ -752,9 +764,10 @@ export default class Map extends React.Component {
         FINISHED_SPOT_COLOR,
         SPOT_FILL_COLOR
       )]: selfBoundSpotLayerGroupFinished,
-      [getTitle('扰动图斑_其他单位已关联', OHTER_SPOT_COLOR, SPOT_FILL_COLOR)]: otherBoundSpotLayerGroup,
-      [getTitle('项目红线_本单位', SELF_PROJECT_COLOR, PROJECT_FILL_COLOR)]: selfProjectLayerGroup,
-      [getTitle('项目红线_其他单位', OHTER_PROJECT_COLOR, PROJECT_FILL_COLOR)]: otherProjectLayerGroup,
+      // [getTitle('扰动图斑_其他单位已关联', OHTER_SPOT_COLOR, SPOT_FILL_COLOR)]: otherBoundSpotLayerGroup,
+      [getTitle('项目红线', SELF_PROJECT_COLOR, PROJECT_FILL_COLOR)]: selfProjectLayerGroup,
+      // [getTitle('项目红线_本单位', SELF_PROJECT_COLOR, PROJECT_FILL_COLOR)]: selfProjectLayerGroup,     
+      // [getTitle('项目红线_其他单位', OHTER_PROJECT_COLOR, PROJECT_FILL_COLOR)]: otherProjectLayerGroup,
       [getImageTitle('标注点', labelPointMarkerImageUrl)]: labelPointLayer,
     };
 
@@ -990,33 +1003,40 @@ export default class Map extends React.Component {
     else if(record.PRID === null && record.ISREVIEW ===1){
       layer = this.unBoundSpotVGLayerFinished;
     }
-    else if(record.PRID !== null && (record.SUP_UNIT === dwid || (record.SUP_UNIT === null && record.BDID === dwid)) && (record.ISREVIEW !==1 || record.ISREVIEW === null)){
+    else if(record.PRID !== null && (record.ISREVIEW !==1 || record.ISREVIEW === null)){
       layer = this.selfBoundSpotVGLayerUnFinished;
     }
-    else if(record.PRID !== null && (record.SUP_UNIT === dwid || (record.SUP_UNIT === null && record.BDID === dwid)) && (record.ISREVIEW ===1)){
+    else if(record.PRID !== null && (record.ISREVIEW ===1)){
       layer = this.selfBoundSpotVGLayerFinished;
     }
-    else if(record.PRID !== null && ((record.SUP_UNIT !== null && record.SUP_UNIT !== dwid) || (record.SUP_UNIT === null && record.BDID !== dwid))){
-      layer = this.otherBoundSpotVGLayer;
-    }
+    // else if(record.PRID !== null && (record.SUP_UNIT === dwid || (record.SUP_UNIT === null && record.BDID === dwid)) && (record.ISREVIEW !==1 || record.ISREVIEW === null)){
+    //   layer = this.selfBoundSpotVGLayerUnFinished;
+    // }
+    // else if(record.PRID !== null && (record.SUP_UNIT === dwid || (record.SUP_UNIT === null && record.BDID === dwid)) && (record.ISREVIEW ===1)){
+    //   layer = this.selfBoundSpotVGLayerFinished;
+    // }
+    // else if(record.PRID !== null && ((record.SUP_UNIT !== null && record.SUP_UNIT !== dwid) || (record.SUP_UNIT === null && record.BDID !== dwid))){
+    //   layer = this.otherBoundSpotVGLayer;
+    // }
     return layer;
   }
 
   // 根据id查询的记录值获取对应的项目红线类型图层
   getProjectLayerByRecord(record){
-    const {
-      login: { user },
-    } = this.props;
-    // 单位id
-    const { dwid } = user;
+    // const {
+    //   login: { user },
+    // } = this.props;
+    // // 单位id
+    // const { dwid } = user;
 
     let layer = null;
-    if(record.SUP_UNIT === dwid || record.SUP_UNIT === null){
-       layer = this.selfProjectVGLayer;
-    }
-    else if(record.SUP_UNIT !== dwid){
-      layer = this.otherProjectVGLayer;
-    }
+    layer = this.selfProjectVGLayer;
+    // if(record.SUP_UNIT === dwid || record.SUP_UNIT === null){
+    //    layer = this.selfProjectVGLayer;
+    // }
+    // else if(record.SUP_UNIT !== dwid){
+    //   layer = this.otherProjectVGLayer;
+    // }
     return layer;
   }
 
@@ -1065,7 +1085,7 @@ export default class Map extends React.Component {
       unBoundSpotmarkerClusterFinished,
       selfBoundSpotmarkerClusterUnFinished,
       selfBoundSpotmarkerClusterFinished,
-      otherBoundSpotmarkerCluster,
+      //otherBoundSpotmarkerCluster,
       clearClusterLayers
     } = this;
     //清空聚合图斑数据
@@ -1073,26 +1093,27 @@ export default class Map extends React.Component {
     clearClusterLayers(unBoundSpotmarkerClusterFinished);
     clearClusterLayers(selfBoundSpotmarkerClusterUnFinished);
     clearClusterLayers(selfBoundSpotmarkerClusterFinished);
-    clearClusterLayers(otherBoundSpotmarkerCluster);
+    //clearClusterLayers(otherBoundSpotmarkerCluster);
     //重新创建矢量瓦片扰动图斑图层
     this.unBoundSpotVGLayerUnFinished.remove();
     this.unBoundSpotVGLayerFinished.remove();
     this.selfBoundSpotVGLayerUnFinished.remove();
     this.selfBoundSpotVGLayerFinished.remove();
-    this.otherBoundSpotVGLayer.remove();
+    //this.otherBoundSpotVGLayer.remove();
     this.createVectorSpotLayers();
 
   }
 
   // 清除项目
   async clearProjects() {
-    const { selfProjectmarkerCluster, otherProjectmarkerCluster, clearClusterLayers } = this;
+    // const { selfProjectmarkerCluster, otherProjectmarkerCluster, clearClusterLayers } = this;
+    const { selfProjectmarkerCluster, clearClusterLayers } = this;
     //清空聚合项目红线数据
     clearClusterLayers(selfProjectmarkerCluster);
-    clearClusterLayers(otherProjectmarkerCluster);
+    //clearClusterLayers(otherProjectmarkerCluster);
     //重新创建矢量瓦片项目红线图层
     this.selfProjectVGLayer.remove();
-    this.otherProjectVGLayer.remove();
+    //this.otherProjectVGLayer.remove();
     this.createVectorProjectLayers();
 
   }
@@ -1202,17 +1223,17 @@ export default class Map extends React.Component {
       unBoundSpotVGLayerFinished,
       selfBoundSpotVGLayerUnFinished,
       selfBoundSpotVGLayerFinished,
-      otherBoundSpotVGLayer,
+      //otherBoundSpotVGLayer,
       unBoundSpotmarkerClusterUnFinished,
       unBoundSpotmarkerClusterFinished,
       selfBoundSpotmarkerClusterUnFinished,
       selfBoundSpotmarkerClusterFinished,
-      otherBoundSpotmarkerCluster,
+      //otherBoundSpotmarkerCluster,
       unBoundSpotLayerGroupUnFinished,
       unBoundSpotLayerGroupFinished,
       selfBoundSpotLayerGroupUnFinished,
       selfBoundSpotLayerGroupFinished,
-      otherBoundSpotLayerGroup
+      //otherBoundSpotLayerGroup
     } = this;
 
     const {
@@ -1222,7 +1243,6 @@ export default class Map extends React.Component {
     const { dwid } = user;
 
     // 未关联_未复核
-    // console.time("未关联_未复核图斑");
     await this.onAddVectorGridSpots(
       '(PRID is null) and (isreview <> 1 or isreview is null)',
       unBoundSpotVGLayerUnFinished,
@@ -1230,10 +1250,8 @@ export default class Map extends React.Component {
       unBoundSpotmarkerClusterUnFinished,
       unBoundSpotLayerGroupUnFinished
     );
-    // console.timeEnd("未关联_未复核图斑");
 
     // 未关联_已复核
-    // console.time("未关联_已复核图斑");
     await this.onAddVectorGridSpots(
       '(PRID is null) and (isreview = 1)',
       unBoundSpotVGLayerFinished,
@@ -1241,38 +1259,51 @@ export default class Map extends React.Component {
       unBoundSpotmarkerClusterFinished,
       unBoundSpotLayerGroupFinished
     );
-    // console.timeEnd("未关联_已复核图斑");
 
-    // 本单位已关联_未复核
-    // console.time("本单位已关联_未复核图斑");
+    // 已关联_未复核
     await this.onAddVectorGridSpots(
-      `(PRID is not null) and (project.SUP_UNIT='${dwid}' or (project.SUP_UNIT is null and BDID='${dwid}')) and (isreview <> 1 or isreview is null)`,
+      `(PRID is not null) and (isreview <> 1 or isreview is null)`,
       selfBoundSpotVGLayerUnFinished,
       500,
       selfBoundSpotmarkerClusterUnFinished,
       selfBoundSpotLayerGroupUnFinished
     );
-    // console.timeEnd("本单位已关联_未复核图斑");
 
-    // 本单位已关联_已复核
-    // console.time("本单位已关联_已复核图斑");
+    // 已关联_已复核
     await this.onAddVectorGridSpots(
-      `(PRID is not null) and (project.SUP_UNIT='${dwid}' or (project.SUP_UNIT is null and BDID='${dwid}')) and (isreview = 1)`,
+      `(PRID is not null) and (isreview = 1)`,
       selfBoundSpotVGLayerFinished,
       600,
       selfBoundSpotmarkerClusterFinished,
       selfBoundSpotLayerGroupFinished
     );
-    // console.timeEnd("本单位已关联_已复核图斑");
+
+     // 本单位已关联_未复核
+    //  await this.onAddVectorGridSpots(
+    //   `(PRID is not null) and (project.SUP_UNIT='${dwid}' or (project.SUP_UNIT is null and BDID='${dwid}')) and (isreview <> 1 or isreview is null)`,
+    //   selfBoundSpotVGLayerUnFinished,
+    //   500,
+    //   selfBoundSpotmarkerClusterUnFinished,
+    //   selfBoundSpotLayerGroupUnFinished
+    // );
+
+    // 本单位已关联_已复核
+    // await this.onAddVectorGridSpots(
+    //   `(PRID is not null) and (project.SUP_UNIT='${dwid}' or (project.SUP_UNIT is null and BDID='${dwid}')) and (isreview = 1)`,
+    //   selfBoundSpotVGLayerFinished,
+    //   600,
+    //   selfBoundSpotmarkerClusterFinished,
+    //   selfBoundSpotLayerGroupFinished
+    // );   
 
     // 其他单位已关联
-    await this.onAddVectorGridSpots(
-      `(PRID is not null) and ((project.SUP_UNIT is not null and project.SUP_UNIT <>'${dwid}') or (project.SUP_UNIT is null and BDID <>'${dwid}'))`,
-      otherBoundSpotVGLayer,
-      700,
-      otherBoundSpotmarkerCluster,
-      otherBoundSpotLayerGroup
-    );
+    // await this.onAddVectorGridSpots(
+    //   `(PRID is not null) and ((project.SUP_UNIT is not null and project.SUP_UNIT <>'${dwid}') or (project.SUP_UNIT is null and BDID <>'${dwid}'))`,
+    //   otherBoundSpotVGLayer,
+    //   700,
+    //   otherBoundSpotmarkerCluster,
+    //   otherBoundSpotLayerGroup
+    // );
 
   }
 
@@ -1285,8 +1316,10 @@ export default class Map extends React.Component {
       limit: 1000000,
       returnGeometry: true,
     });
+    //console.log('1323',items);
     //查询数据源构造geojson
     let geojson = this.data2GeoJSON(items,"spot",layer);
+    //console.log('1326',geojson);
     if(geojson){
       //加载图斑聚合图层
       await this.addClusterLayers(geojson,clusterlayer);
@@ -1413,10 +1446,10 @@ export default class Map extends React.Component {
             me.selfBoundSpotHighLightFinished = e.layer.properties.QDNM;
             me.selfBoundSpotVGLayerFinished = layer;
               break;
-          case 5:
-            me.otherBoundSpotHighLight = e.layer.properties.QDNM;
-            me.otherBoundSpotVGLayer = layer;
-              break;
+          // case 5:
+          //   me.otherBoundSpotHighLight = e.layer.properties.QDNM;
+          //   me.otherBoundSpotVGLayer = layer;
+          //     break;
         }
         layer.setFeatureStyle(e.layer.properties.QDNM, highlightstyle);
         //设置图层顺序
@@ -1453,9 +1486,9 @@ export default class Map extends React.Component {
       case 4:
         me.selfBoundSpotVGLayerFinished = layer;
           break;
-      case 5:
-        me.otherBoundSpotVGLayer = layer;
-          break;
+      // case 5:
+      //   me.otherBoundSpotVGLayer = layer;
+      //     break;
     }
 
   }
@@ -1545,20 +1578,20 @@ export default class Map extends React.Component {
     }
     this.selfBoundSpotHighLightFinished = null;
 
-    if (this.otherBoundSpotHighLight) {
-      this.otherBoundSpotVGLayer.resetFeatureStyle(this.otherBoundSpotHighLight);
-    }
-    this.otherBoundSpotHighLight = null;
+    // if (this.otherBoundSpotHighLight) {
+    //   this.otherBoundSpotVGLayer.resetFeatureStyle(this.otherBoundSpotHighLight);
+    // }
+    // this.otherBoundSpotHighLight = null;
 
     if (this.selfProjectHighLight) {
       this.selfProjectVGLayer.resetFeatureStyle(this.selfProjectHighLight);
     }
     this.selfProjectHighLight = null;
 
-    if (this.otherProjectHighLight) {
-      this.otherProjectVGLayer.resetFeatureStyle(this.otherProjectHighLight);
-    }
-    this.otherProjectHighLight = null;
+    // if (this.otherProjectHighLight) {
+    //   this.otherProjectVGLayer.resetFeatureStyle(this.otherProjectHighLight);
+    // }
+    //this.otherProjectHighLight = null;
 
   };
 
@@ -1639,7 +1672,7 @@ export default class Map extends React.Component {
         this.unBoundSpotVGLayerFinished.resetFeatureStyle(record);
         this.selfBoundSpotVGLayerUnFinished.resetFeatureStyle(record);
         this.selfBoundSpotVGLayerFinished.resetFeatureStyle(record);
-        this.otherBoundSpotVGLayer.resetFeatureStyle(record);
+        // this.otherBoundSpotVGLayer.resetFeatureStyle(record);
       });
     }
   }
@@ -1668,7 +1701,8 @@ export default class Map extends React.Component {
     // 本单位已监管项目
     // console.time("本单位已监管项目");
     await this.onAddVectorGridProjects(
-      `SUP_UNIT='${dwid}' or SUP_UNIT is null`,
+      // `SUP_UNIT='${dwid}' or SUP_UNIT is null`,
+      '',
       this.selfProjectVGLayer,
       100,
       this.selfProjectmarkerCluster,
@@ -1678,13 +1712,13 @@ export default class Map extends React.Component {
 
     // 其他单位监管项目
     // console.time("其他单位监管项目");
-    await this.onAddVectorGridProjects(
-      `SUP_UNIT<>'${dwid}'`,
-      this.otherProjectVGLayer,
-      200,
-      this.otherProjectmarkerCluster,
-      this.otherProjectLayerGroup
-    );
+    // await this.onAddVectorGridProjects(
+    //   `SUP_UNIT<>'${dwid}'`,
+    //   this.otherProjectVGLayer,
+    //   200,
+    //   this.otherProjectmarkerCluster,
+    //   this.otherProjectLayerGroup
+    // );
     // console.timeEnd("其他单位监管项目");
   }
 
@@ -1743,10 +1777,10 @@ export default class Map extends React.Component {
             me.selfProjectHighLight = e.layer.properties.PRID;
             me.selfProjectVGLayer = layer;
               break;
-          case 7:
-            me.otherProjectHighLight = e.layer.properties.PRID;
-            me.otherProjectVGLayer = layer;
-              break;
+          // case 7:
+          //   me.otherProjectHighLight = e.layer.properties.PRID;
+          //   me.otherProjectVGLayer = layer;
+          //     break;
         }
         layer.setFeatureStyle(e.layer.properties.PRID, highlightstyle);
         //设置图层顺序
@@ -1755,7 +1789,7 @@ export default class Map extends React.Component {
         me.unBoundSpotVGLayerFinished.setZIndex(400);
         me.selfBoundSpotVGLayerUnFinished.setZIndex(500);
         me.selfBoundSpotVGLayerFinished.setZIndex(600);
-        me.otherBoundSpotVGLayer.setZIndex(700);
+        // me.otherBoundSpotVGLayer.setZIndex(700);
         me.isShowHighLight = true;
 
         layer.unbindPopup();

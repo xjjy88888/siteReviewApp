@@ -326,15 +326,15 @@ export default {
           type: 'refresh',
         });
 
-        // // 刷新地图上的图斑
-        // const records = yield call(querySpotByIdForMap, {
-        //   id: payload.record.ID,
-        // });
-        // const [record] = records;
-        // yield put({
-        //   type: 'index/refreshMultipleSpots',
-        //   payload: { records: [record] },
-        // });
+        // 刷新地图上的图斑
+        const records = yield call(querySpotByIdForMap, {
+          id: payload.record.ID,
+        });
+        const [record] = records;
+        yield put({
+          type: 'index/refreshMultipleSpots',
+          payload: { records: [record] },
+        });
 
       }
       else {

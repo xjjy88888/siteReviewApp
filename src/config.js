@@ -1,10 +1,28 @@
 const isBeta = false;
 
-const myOnlineImageUrl = 'http://www.stbcjg.cn/BasemapService/rest/image/latest';
+const myOnlineImageUrl =
+  "http://www.stbcjg.cn/BasemapService/rest/image/latest/tile/{z}/{y}/{x}";
 const arcgisVectorUrl =
-  'http://cache1.arcgisonline.cn/arcgis/rest/services/ChinaOnlineCommunity/MapServer';
+  "http://cache1.arcgisonline.cn/arcgis/rest/services/ChinaOnlineCommunity/MapServer/tile/{z}/{y}/{x}";
 const arcgisImageUrl =
-  'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer';
+  "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+const tdtVectorUrl =
+"http://t{s}.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=7786923a385369346d56b966bb6ad62f";
+const tdtImageUrl =
+"http://t{s}.tianditu.gov.cn/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=7786923a385369346d56b966bb6ad62f";
+const googleVectorUrl =
+"http://www.google.cn/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}";
+const googleImageUrl =
+"http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}";
+const gaodeVectorUrl =
+"http://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}";
+const gaodeImageUrl =
+"http://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}";
+// const bdVectorUrl =
+//   'http://online{s}.map.bdimg.com/onlinelabel/?qt=tile&x={x}&y={y}&z={z}&styles={styles}&scaler=1&p=1';
+// const bdImageUrl =
+//   'http://shangetu{s}.map.bdimg.com/it/u=x={x};y={y};z={z};v=009;type=sate&fm=46';
+const OSMVectorUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 const domain = isBeta ? `http://183.6.178.124:8001/stbct/` : `https://www.zkygis.cn/stbc/`;
 
@@ -34,34 +52,111 @@ const config = {
   // 离线底图
   offlineBasemap: {
     title: '监管影像（离线）',
-    url: myOnlineImageUrl,
+    // url: myOnlineImageUrl,
+    url:'http://www.stbcjg.cn/BasemapService/rest/image/latest',
     minZoom: 0,
     maxZoom: 20,
     folder: 'cache',
     name: 'myImageLayer',
     debug: false,
+    subdomains: "abc",
+    picUrl: `./img/myOnlineImage.png`
   },
 
   // 在线底图
   onlineBasemaps: [
     {
-      title: '监管影像（在线）',
+      title: "监管影像图",
       url: myOnlineImageUrl,
       minZoom: 0,
       maxZoom: 20,
+      subdomains: "abc",
+      picUrl: `./img/myOnlineImage.png`
     },
     {
-      title: '地形（在线，有偏移）',
-      url: arcgisVectorUrl,
+      title: "OSM街道图",
+      url: OSMVectorUrl,
       minZoom: 0,
       maxZoom: 18,
+      subdomains: "abc",
+      picUrl: `./img/OSMVector.png`
     },
     {
-      title: '影像（在线）',
+      title: "ArcGIS影像图",
       url: arcgisImageUrl,
       minZoom: 0,
       maxZoom: 18,
+      subdomains: "abc",
+      picUrl: `./img/arcgisImage.png`
     },
+    {
+      title: "ArcGIS街道图(有偏移)",
+      url: arcgisVectorUrl,
+      minZoom: 0,
+      maxZoom: 18,
+      subdomains: "abc",
+      picUrl: `./img/arcgisVector.png`
+    },
+    {
+      title: "天地影像图",
+      url: tdtImageUrl,
+      minZoom: 0,
+      maxZoom: 18,
+      subdomains: ["0", "1", "2", "3", "4", "5", "6", "7"],
+      picUrl: `./img/tdtImage.png`
+    },
+    {
+      title: "天地街道图",
+      url: tdtVectorUrl,
+      minZoom: 0,
+      maxZoom: 18,
+      subdomains: ["0", "1", "2", "3", "4", "5", "6", "7"],
+      picUrl: `./img/tdtVector.png`
+    },
+    {
+      title: "谷歌影像图(有偏移)",
+      url: googleImageUrl,
+      minZoom: 0,
+      maxZoom: 18,
+      subdomains: "abc",
+      picUrl: `./img/googleImage.png`
+    },
+    {
+      title: "谷歌街道图(有偏移)",
+      url: googleVectorUrl,
+      minZoom: 0,
+      maxZoom: 18,
+      subdomains: "abc",
+      picUrl: `./img/googleVector.png`
+    },
+    {
+      title: "高德影像图(有偏移)",
+      url: gaodeImageUrl,
+      minZoom: 0,
+      maxZoom: 18,
+      subdomains: ["1", "2", "3", "4"],
+      picUrl: `./img/gaodeImage.png`
+    },
+    {
+      title: "高德街道图(有偏移)",
+      url: gaodeVectorUrl,
+      minZoom: 0,
+      maxZoom: 18,
+      subdomains: ["1", "2", "3", "4"],
+      picUrl: `./img/gaodeVector.png`
+    }
+    // {
+    //   title: '百度街道图',
+    //   url: bdVectorUrl,
+    //   minZoom: 0,
+    //   maxZoom: 18,
+    // },
+    // {
+    //   title: '百度影像图',
+    //   url: bdImageUrl,
+    //   minZoom: 0,
+    //   maxZoom: 18,
+    // },
   ],
 
   // 下载影像的参考在线底图
