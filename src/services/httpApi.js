@@ -172,11 +172,13 @@ export async function queryCsUnits(onlyCount) {
 
 // 查询附件
 export async function queryAttachments(params) {
-  return request(`${config.attachsUrl}?ids=${params.id}&soucre=${params.soucre}`, {
-    method: 'GET',
+  return request(`${config.attachsUrl}?soucre=${params.soucre}`, {
+    method: 'POST',
     headers: {
       Authorization: `Bearer ${accessToken()}`,
+      'Content-Type': 'application/json-patch+json',
     },
+    body: JSON.stringify(params.id.split(',')),
   });
 }
 
