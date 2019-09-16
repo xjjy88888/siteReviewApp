@@ -1,4 +1,4 @@
-const isBeta = false;
+const isBeta = true;
 
 const myOnlineImageUrl =
   "http://www.stbcjg.cn/BasemapService/rest/image/latest/tile/{z}/{y}/{x}";
