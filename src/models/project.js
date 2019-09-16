@@ -238,10 +238,10 @@ export default {
             });
           }
 
-          //新增，刷新扰动图斑信息
-          yield put({
-            type: 'index/refreshSpots'
-          });
+          // //新增，刷新扰动图斑信息
+          // yield put({
+          //   type: 'index/refreshSpots'
+          // });
           //新增，刷新保存项目红线信息
           yield put({
             type: 'index/refreshProjects'

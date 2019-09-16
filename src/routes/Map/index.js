@@ -187,7 +187,9 @@ export default class Map extends React.Component {
     // 刷新地图上的项目
     if (nextProps.refreshProjects !== this.props.refreshProjects) {
       console.log('refreshProjects', nextProps.refreshProjects);
-      this.refreshProjects();
+      //this.refreshProjects();
+      this.clearHighlight();
+      this.selfProjectVGLayer.closePopup();
     }
 
     // 刷新地图上的标注点
