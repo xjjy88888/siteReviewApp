@@ -5,7 +5,7 @@ import { withRouter } from 'dva/router';
 import L from 'leaflet';
 // import Util from 'esri-leaflet/src/Util';
 import 'proj4leaflet';
-import "leaflet.vectorgrid";//矢量瓦片
+import 'leaflet.vectorgrid'; //矢量瓦片
 // import 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js'; //矢量瓦片
 import 'leaflet-easybutton';
 import 'leaflet.markercluster';
@@ -16,7 +16,7 @@ import 'leaflet.pm/dist/leaflet.pm.css';
 import 'leaflet-bookmarks';
 import 'leaflet-bookmarks/dist/leaflet.bookmarks.css';
 import 'leaflet-rotatedmarker';
-import * as turf from "@turf/turf";
+import * as turf from '@turf/turf';
 import jQuery from 'jquery';
 import labelPointMarkerImageUrl from '@/assets/labelPointMarker.png';
 import './index.less';
@@ -134,7 +134,7 @@ export default class Map extends React.Component {
   }
 
   componentDidMount() {
-    console.log("地图初始化加载");
+    console.log('地图初始化加载');
     const me = this;
     // 创建图层
     me.createLayers();
@@ -247,7 +247,7 @@ export default class Map extends React.Component {
     } else {
       // 自己发布的影像瓦片图层（使用在线地图模拟离线地图）
       const myOfflineImageLayer = L.tileLayer(`${offlineBasemap.url}/tile/{z}/{y}/{x}`, {
-      // const myOfflineImageLayer = L.tileLayer(`${offlineBasemap.url}`, {
+        // const myOfflineImageLayer = L.tileLayer(`${offlineBasemap.url}`, {
         minZoom: offlineBasemap.minZoom,
         maxZoom: offlineBasemap.maxZoom,
         // subdomains: offlineBasemap.subdomains
@@ -264,7 +264,7 @@ export default class Map extends React.Component {
       return L.tileLayer(`${item.url}`, {
         minZoom: item.minZoom,
         maxZoom: item.maxZoom,
-        subdomains: item.subdomains
+        subdomains: item.subdomains,
       });
     });
 
@@ -277,8 +277,8 @@ export default class Map extends React.Component {
       showCoverageOnHover: false,
       zoomToBoundsOnClick: true,
       chunkedLoading: true,
-      maxClusterRadius: 100,//默认80
-      iconCreateFunction: function (cluster) {
+      maxClusterRadius: 100, //默认80
+      iconCreateFunction: function(cluster) {
         return L.BeautifyIcon.icon({
           ...{
             iconShape: 'circle',
@@ -297,18 +297,17 @@ export default class Map extends React.Component {
       },
     });
 
-
     this.createVectorSpotLayers();
     //矢量瓦片未关联_未复核图斑图层
     this.unBoundSpotHighLightUnFinished = null;
     //未关联_未复核图斑聚合图层
     this.unBoundSpotmarkerClusterUnFinished = L.markerClusterGroup({
-      clusterPane: "markerClusterZIndex",
+      clusterPane: 'markerClusterZIndex',
       showCoverageOnHover: false,
       zoomToBoundsOnClick: true,
       chunkedLoading: true,
-      maxClusterRadius: 200,//默认80
-      iconCreateFunction: function (cluster) {
+      maxClusterRadius: 200, //默认80
+      iconCreateFunction: function(cluster) {
         return L.BeautifyIcon.icon({
           ...{
             iconShape: 'circle',
@@ -328,18 +327,21 @@ export default class Map extends React.Component {
       },
     });
     //未关联_未复核图斑图层组
-    this.unBoundSpotLayerGroupUnFinished = L.layerGroup([this.unBoundSpotVGLayerUnFinished, this.unBoundSpotmarkerClusterUnFinished]);
+    this.unBoundSpotLayerGroupUnFinished = L.layerGroup([
+      this.unBoundSpotVGLayerUnFinished,
+      this.unBoundSpotmarkerClusterUnFinished,
+    ]);
 
     //矢量瓦片未关联_已复核图斑图层
     this.unBoundSpotHighLightFinished = null;
     //未关联_已复核图斑聚合图层
     this.unBoundSpotmarkerClusterFinished = L.markerClusterGroup({
-      clusterPane: "markerClusterZIndex",
+      clusterPane: 'markerClusterZIndex',
       showCoverageOnHover: false,
       zoomToBoundsOnClick: true,
       chunkedLoading: true,
-      maxClusterRadius: 200,//默认80
-      iconCreateFunction: function (cluster) {
+      maxClusterRadius: 200, //默认80
+      iconCreateFunction: function(cluster) {
         return L.BeautifyIcon.icon({
           ...{
             iconShape: 'circle',
@@ -359,18 +361,21 @@ export default class Map extends React.Component {
       },
     });
     //未关联_已复核图斑图层组
-    this.unBoundSpotLayerGroupFinished = L.layerGroup([this.unBoundSpotVGLayerFinished, this.unBoundSpotmarkerClusterFinished]);
+    this.unBoundSpotLayerGroupFinished = L.layerGroup([
+      this.unBoundSpotVGLayerFinished,
+      this.unBoundSpotmarkerClusterFinished,
+    ]);
 
     //矢量瓦片本单位已关联_未复核图斑图层
     this.selfBoundSpotHighLightUnFinished = null;
     //本单位已关联_未复核图斑聚合图层
     this.selfBoundSpotmarkerClusterUnFinished = L.markerClusterGroup({
-      clusterPane: "markerClusterZIndex",
+      clusterPane: 'markerClusterZIndex',
       showCoverageOnHover: false,
       zoomToBoundsOnClick: true,
       chunkedLoading: true,
-      maxClusterRadius: 200,//默认80
-      iconCreateFunction: function (cluster) {
+      maxClusterRadius: 200, //默认80
+      iconCreateFunction: function(cluster) {
         return L.BeautifyIcon.icon({
           ...{
             iconShape: 'circle',
@@ -389,18 +394,21 @@ export default class Map extends React.Component {
       },
     });
     //本单位已关联_未复核图斑图层组
-    this.selfBoundSpotLayerGroupUnFinished = L.layerGroup([this.selfBoundSpotVGLayerUnFinished, this.selfBoundSpotmarkerClusterUnFinished]);
+    this.selfBoundSpotLayerGroupUnFinished = L.layerGroup([
+      this.selfBoundSpotVGLayerUnFinished,
+      this.selfBoundSpotmarkerClusterUnFinished,
+    ]);
 
     //矢量瓦片本单位已关联_已复核图斑图层
     this.selfBoundSpotHighLightFinished = null;
     //本单位已关联_已复核图斑聚合图层
     this.selfBoundSpotmarkerClusterFinished = L.markerClusterGroup({
-      clusterPane: "markerClusterZIndex",
+      clusterPane: 'markerClusterZIndex',
       showCoverageOnHover: false,
       zoomToBoundsOnClick: true,
       chunkedLoading: true,
-      maxClusterRadius: 200,//默认80
-      iconCreateFunction: function (cluster) {
+      maxClusterRadius: 200, //默认80
+      iconCreateFunction: function(cluster) {
         return L.BeautifyIcon.icon({
           ...{
             iconShape: 'circle',
@@ -419,18 +427,21 @@ export default class Map extends React.Component {
       },
     });
     //本单位已关联_已复核图斑图层组
-    this.selfBoundSpotLayerGroupFinished = L.layerGroup([this.selfBoundSpotVGLayerFinished, this.selfBoundSpotmarkerClusterFinished]);
+    this.selfBoundSpotLayerGroupFinished = L.layerGroup([
+      this.selfBoundSpotVGLayerFinished,
+      this.selfBoundSpotmarkerClusterFinished,
+    ]);
 
     //矢量瓦片其他单位已关联图斑图层
     this.otherBoundSpotHighLight = null;
     //其他单位已关联图斑聚合图层
     this.otherBoundSpotmarkerCluster = L.markerClusterGroup({
-      clusterPane: "markerClusterZIndex",
+      clusterPane: 'markerClusterZIndex',
       showCoverageOnHover: false,
       zoomToBoundsOnClick: true,
       chunkedLoading: true,
-      maxClusterRadius: 200,//默认80
-      iconCreateFunction: function (cluster) {
+      maxClusterRadius: 200, //默认80
+      iconCreateFunction: function(cluster) {
         return L.BeautifyIcon.icon({
           ...{
             iconShape: 'circle',
@@ -449,19 +460,22 @@ export default class Map extends React.Component {
       },
     });
     //其他单位已关联图斑图层组
-    this.otherBoundSpotLayerGroup= L.layerGroup([this.otherBoundSpotVGLayer, this.otherBoundSpotmarkerCluster]);
+    this.otherBoundSpotLayerGroup = L.layerGroup([
+      this.otherBoundSpotVGLayer,
+      this.otherBoundSpotmarkerCluster,
+    ]);
 
     this.createVectorProjectLayers();
     //矢量瓦片本单位项目红线图层
     this.selfProjectHighLight = null;
     //本单位项目红线聚合图层
     this.selfProjectmarkerCluster = L.markerClusterGroup({
-      clusterPane: "markerClusterZIndex",
+      clusterPane: 'markerClusterZIndex',
       showCoverageOnHover: false,
       zoomToBoundsOnClick: true,
       chunkedLoading: true,
-      maxClusterRadius: 200,//默认80
-      iconCreateFunction: function (cluster) {
+      maxClusterRadius: 200, //默认80
+      iconCreateFunction: function(cluster) {
         return L.BeautifyIcon.icon({
           ...{
             iconShape: 'circle',
@@ -480,18 +494,21 @@ export default class Map extends React.Component {
       },
     });
     //本单位项目红线图层组
-    this.selfProjectLayerGroup= L.layerGroup([this.selfProjectVGLayer, this.selfProjectmarkerCluster]);
+    this.selfProjectLayerGroup = L.layerGroup([
+      this.selfProjectVGLayer,
+      this.selfProjectmarkerCluster,
+    ]);
 
     //矢量瓦片其他单位项目红线图层
-    this.otherProjectHighLight  = null;
+    this.otherProjectHighLight = null;
     //其他单位项目红线聚合图层
     this.otherProjectmarkerCluster = L.markerClusterGroup({
-      clusterPane: "markerClusterZIndex",
+      clusterPane: 'markerClusterZIndex',
       showCoverageOnHover: false,
       zoomToBoundsOnClick: true,
       chunkedLoading: true,
-      maxClusterRadius: 200,//默认80
-      iconCreateFunction: function (cluster) {
+      maxClusterRadius: 200, //默认80
+      iconCreateFunction: function(cluster) {
         return L.BeautifyIcon.icon({
           ...{
             iconShape: 'circle',
@@ -510,8 +527,10 @@ export default class Map extends React.Component {
       },
     });
     //其他单位项目红线图层组
-    this.otherProjectLayerGroup = L.layerGroup([this.otherProjectVGLayer, this.otherProjectmarkerCluster]);
-
+    this.otherProjectLayerGroup = L.layerGroup([
+      this.otherProjectVGLayer,
+      this.otherProjectmarkerCluster,
+    ]);
   };
 
   // 创建矢量瓦片扰动图斑图层
@@ -527,7 +546,7 @@ export default class Map extends React.Component {
         fill: true,
       },
       isEdit: true,
-      HighLightType:1
+      HighLightType: 1,
     });
     this.unBoundSpotVGLayerUnFinished = unBoundSpotVGLayerUnFinished;
 
@@ -542,7 +561,7 @@ export default class Map extends React.Component {
         fill: true,
       },
       isEdit: true,
-      HighLightType:2
+      HighLightType: 2,
     });
     this.unBoundSpotVGLayerFinished = unBoundSpotVGLayerFinished;
 
@@ -556,7 +575,7 @@ export default class Map extends React.Component {
         fill: true,
       },
       isEdit: true,
-      HighLightType:3
+      HighLightType: 3,
     });
     this.selfBoundSpotVGLayerUnFinished = selfBoundSpotVGLayerUnFinished;
 
@@ -570,7 +589,7 @@ export default class Map extends React.Component {
         fill: true,
       },
       isEdit: true,
-      HighLightType:4
+      HighLightType: 4,
     });
     this.selfBoundSpotVGLayerFinished = selfBoundSpotVGLayerFinished;
 
@@ -584,10 +603,10 @@ export default class Map extends React.Component {
         fill: true,
       },
       isEdit: true,
-      HighLightType:5
+      HighLightType: 5,
     });
     this.otherBoundSpotVGLayer = otherBoundSpotVGLayer;
-  }
+  };
 
   // 创建矢量瓦片项目红线图层
   createVectorProjectLayers = () => {
@@ -601,7 +620,7 @@ export default class Map extends React.Component {
         fill: true,
       },
       isEdit: true,
-      HighLightType:6
+      HighLightType: 6,
     });
     this.selfProjectVGLayer = selfProjectVGLayer;
 
@@ -615,10 +634,10 @@ export default class Map extends React.Component {
         fill: true,
       },
       isEdit: true,
-      HighLightType:7
+      HighLightType: 7,
     });
     this.otherProjectVGLayer = otherProjectVGLayer;
-  }
+  };
 
   // 创建Deflate图层
   createDeflateLayer = markerOption => {
@@ -694,7 +713,6 @@ export default class Map extends React.Component {
         //otherBoundSpotLayerGroup,
         selfProjectLayerGroup,
         //otherProjectLayerGroup
-
       ],
     });
     this.map = map;
@@ -766,7 +784,7 @@ export default class Map extends React.Component {
       )]: selfBoundSpotLayerGroupFinished,
       // [getTitle('扰动图斑_其他单位已关联', OHTER_SPOT_COLOR, SPOT_FILL_COLOR)]: otherBoundSpotLayerGroup,
       [getTitle('项目红线', SELF_PROJECT_COLOR, PROJECT_FILL_COLOR)]: selfProjectLayerGroup,
-      // [getTitle('项目红线_本单位', SELF_PROJECT_COLOR, PROJECT_FILL_COLOR)]: selfProjectLayerGroup,     
+      // [getTitle('项目红线_本单位', SELF_PROJECT_COLOR, PROJECT_FILL_COLOR)]: selfProjectLayerGroup,
       // [getTitle('项目红线_其他单位', OHTER_PROJECT_COLOR, PROJECT_FILL_COLOR)]: otherProjectLayerGroup,
       [getImageTitle('标注点', labelPointMarkerImageUrl)]: labelPointLayer,
     };
@@ -800,14 +818,14 @@ export default class Map extends React.Component {
       console.log('定位');
       // eslint-disable-next-line
       getCurrentPosition().then(result => {
-        const { radius, latitude, longitude } = result;
+        const { latitude, longitude } = result;
 
         // 绘制当前位置
         const latlng = gcj02toWgs84LatLng(L.latLng(latitude, longitude));
         locateLayer.clearLayers();
 
         // 画圆
-        L.circle(latlng, radius).addTo(locateLayer);
+        L.circle(latlng, 150).addTo(locateLayer);
 
         // 画点
         L.circle(latlng, {
@@ -875,7 +893,6 @@ export default class Map extends React.Component {
 
   // 创建书签按钮
   createBookmarkButton = () => {
-
     const { map } = this;
     const container = new L.Control.Bookmarks({
       position: 'bottomleft',
@@ -962,15 +979,18 @@ export default class Map extends React.Component {
   // -----------------------------------------------------------------------------------------------------
   // 定位要素
   // eslint-disable-next-line
-  async locateFeature(id, type){
-    type === "spot" ? this.locateSpotFeature(id):
-    type === "project" ? this.locatePtojectFeature(id): null;
-  };
+  async locateFeature(id, type) {
+    type === 'spot'
+      ? this.locateSpotFeature(id)
+      : type === 'project'
+      ? this.locatePtojectFeature(id)
+      : null;
+  }
 
-  async locateSpotFeature(id){
+  async locateSpotFeature(id) {
     //根据id查询数据库对应的记录records
     const records = await querySpotMapById({ id: id });
-    if(records.length>0){
+    if (records.length > 0) {
       //根据查询记录判断属于哪个图斑类型图层
       const layer = this.getSpotLayerByRecord(records[0]);
       const isEdit = layer.isEdit || layer.options.isEdit;
@@ -979,17 +999,16 @@ export default class Map extends React.Component {
       const latlng = L.latLng(centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]);
       this.map.setView(latlng, config.locateFeatureLevel);
       setTimeout(() => {
-        const elements = this.getSpotPopupContent(records[0],latlng,isEdit);
+        const elements = this.getSpotPopupContent(records[0], latlng, isEdit);
         this.map.openPopup(elements[0], latlng);
       }, 0);
       return true;
     }
     return false;
-
   }
 
   // 根据id查询的记录值获取对应的图斑类型图层
-  getSpotLayerByRecord(record){
+  getSpotLayerByRecord(record) {
     const {
       login: { user },
     } = this.props;
@@ -997,16 +1016,13 @@ export default class Map extends React.Component {
     const { dwid } = user;
 
     let layer = null;
-    if(record.PRID === null && (record.ISREVIEW !==1 || record.ISREVIEW === null)){
-       layer = this.unBoundSpotVGLayerUnFinished;
-    }
-    else if(record.PRID === null && record.ISREVIEW ===1){
+    if (record.PRID === null && (record.ISREVIEW !== 1 || record.ISREVIEW === null)) {
+      layer = this.unBoundSpotVGLayerUnFinished;
+    } else if (record.PRID === null && record.ISREVIEW === 1) {
       layer = this.unBoundSpotVGLayerFinished;
-    }
-    else if(record.PRID !== null && (record.ISREVIEW !==1 || record.ISREVIEW === null)){
+    } else if (record.PRID !== null && (record.ISREVIEW !== 1 || record.ISREVIEW === null)) {
       layer = this.selfBoundSpotVGLayerUnFinished;
-    }
-    else if(record.PRID !== null && (record.ISREVIEW ===1)){
+    } else if (record.PRID !== null && record.ISREVIEW === 1) {
       layer = this.selfBoundSpotVGLayerFinished;
     }
     // else if(record.PRID !== null && (record.SUP_UNIT === dwid || (record.SUP_UNIT === null && record.BDID === dwid)) && (record.ISREVIEW !==1 || record.ISREVIEW === null)){
@@ -1022,7 +1038,7 @@ export default class Map extends React.Component {
   }
 
   // 根据id查询的记录值获取对应的项目红线类型图层
-  getProjectLayerByRecord(record){
+  getProjectLayerByRecord(record) {
     // const {
     //   login: { user },
     // } = this.props;
@@ -1040,27 +1056,26 @@ export default class Map extends React.Component {
     return layer;
   }
 
-  async locatePtojectFeature(id){
+  async locatePtojectFeature(id) {
     //根据id查询数据库对应的记录records
     const records = await queryProjectById({ id: id });
-    if(records.length>0){
+    if (records.length > 0) {
       //根据查询记录判断属于哪个红线红线类型图层
       const layer = this.getProjectLayerByRecord(records[0]);
       const isEdit = layer.isEdit || layer.options.isEdit;
       const geojson = JSON.parse(records[0].SHAPE);
       let coordinate = null;
-      if(geojson.type === 'Polygon'){
+      if (geojson.type === 'Polygon') {
         coordinate = geojson.coordinates[0];
         coordinate = coordinate[0];
-      }
-      else if( geojson.type === 'MultiPolygon'){
+      } else if (geojson.type === 'MultiPolygon') {
         coordinate = geojson.coordinates[0];
         coordinate = coordinate[0][0];
       }
       const latlng = L.latLng(coordinate[1], coordinate[0]);
       this.map.setView(latlng, config.locateFeatureLevel);
       setTimeout(() => {
-        const elements = this.getProjectPopupContent(records[0],latlng,isEdit);
+        const elements = this.getProjectPopupContent(records[0], latlng, isEdit);
         this.map.openPopup(elements[0], latlng);
       }, 0);
       return true;
@@ -1070,12 +1085,11 @@ export default class Map extends React.Component {
 
   // 移除标注要素
   // eslint-disable-next-line
-  removeLabelFeature = (layer) => {
-    if(layer){
+  removeLabelFeature = layer => {
+    if (layer) {
       this.labelPointLayer.removeLayer(layer);
     }
   };
-
 
   // -----------------------------------------------------------------------------------------------------
   // 清除图斑
@@ -1086,7 +1100,7 @@ export default class Map extends React.Component {
       selfBoundSpotmarkerClusterUnFinished,
       selfBoundSpotmarkerClusterFinished,
       //otherBoundSpotmarkerCluster,
-      clearClusterLayers
+      clearClusterLayers,
     } = this;
     //清空聚合图斑数据
     clearClusterLayers(unBoundSpotmarkerClusterUnFinished);
@@ -1101,7 +1115,6 @@ export default class Map extends React.Component {
     this.selfBoundSpotVGLayerFinished.remove();
     //this.otherBoundSpotVGLayer.remove();
     this.createVectorSpotLayers();
-
   }
 
   // 清除项目
@@ -1115,7 +1128,6 @@ export default class Map extends React.Component {
     this.selfProjectVGLayer.remove();
     //this.otherProjectVGLayer.remove();
     this.createVectorProjectLayers();
-
   }
 
   // 清除标注点
@@ -1127,7 +1139,6 @@ export default class Map extends React.Component {
   // -----------------------------------------------------------------------------------------------------
   // 添加所有要素
   async addAllFeatures() {
-
     this.setState({ loading: true });
 
     const {
@@ -1139,7 +1150,7 @@ export default class Map extends React.Component {
     //标注点
     await this.addLabelPoints();
     //矢量瓦片渲染加载方案
-    this.map.createPane("markerClusterZIndex").style.zIndex = 800;
+    this.map.createPane('markerClusterZIndex').style.zIndex = 800;
     await this.addVectorGridSpots();
     await this.addVectorGridProjects();
     // 加载数据后，地图定位到要素中任意一点
@@ -1148,10 +1159,9 @@ export default class Map extends React.Component {
     this.setState({ loading: false });
 
     //监听地图点击事件
-    this.map.on("click", this.onClickMap);
+    this.map.on('click', this.onClickMap);
     //监听地图范围变化事件
-    this.map.on("moveend", this.onMoveendMap);
-
+    this.map.on('moveend', this.onMoveendMap);
   }
 
   //刷新所有要素
@@ -1278,7 +1288,7 @@ export default class Map extends React.Component {
       selfBoundSpotLayerGroupFinished
     );
 
-     // 本单位已关联_未复核
+    // 本单位已关联_未复核
     //  await this.onAddVectorGridSpots(
     //   `(PRID is not null) and (project.SUP_UNIT='${dwid}' or (project.SUP_UNIT is null and BDID='${dwid}')) and (isreview <> 1 or isreview is null)`,
     //   selfBoundSpotVGLayerUnFinished,
@@ -1294,7 +1304,7 @@ export default class Map extends React.Component {
     //   600,
     //   selfBoundSpotmarkerClusterFinished,
     //   selfBoundSpotLayerGroupFinished
-    // );   
+    // );
 
     // 其他单位已关联
     // await this.onAddVectorGridSpots(
@@ -1304,13 +1314,12 @@ export default class Map extends React.Component {
     //   otherBoundSpotmarkerCluster,
     //   otherBoundSpotLayerGroup
     // );
-
   }
 
   /*
    * 添加矢量瓦片图斑图形（查询条件、图斑图层）
-  */
-  async onAddVectorGridSpots(where, layer, zIndex,clusterlayer,layergroup) {
+   */
+  async onAddVectorGridSpots(where, layer, zIndex, clusterlayer, layergroup) {
     const items = await querySpots({
       where,
       limit: 1000000,
@@ -1318,48 +1327,45 @@ export default class Map extends React.Component {
     });
     //console.log('1323',items);
     //查询数据源构造geojson
-    let geojson = this.data2GeoJSON(items,"spot",layer);
+    let geojson = this.data2GeoJSON(items, 'spot', layer);
     //console.log('1326',geojson);
-    if(geojson){
+    if (geojson) {
       //加载图斑聚合图层
-      await this.addClusterLayers(geojson,clusterlayer);
+      await this.addClusterLayers(geojson, clusterlayer);
       // console.log('矢量瓦片图斑数据', geojson);
       //加载图斑矢量瓦片图层
-      await this.loadSpotVectorLayer(layer,geojson,zIndex,layergroup);
+      await this.loadSpotVectorLayer(layer, geojson, zIndex, layergroup);
     }
-
   }
 
   /*
    * 加载扰动图斑以及项目红线聚合图层
    */
-  async addClusterLayers(geojson,clusterlayer) {
+  async addClusterLayers(geojson, clusterlayer) {
     let markerList = [];
     for (let i = 0; i < geojson.features.length; i++) {
-        let geometry = geojson.features[i].geometry;
-        let coordinate = null;
-        if(geometry.type === 'Polygon'){
-          coordinate = geometry.coordinates[0];
-          coordinate = coordinate[0];
-        }
-        else if( geometry.type === 'MultiPolygon'){
-          coordinate = geometry.coordinates[0];
-          coordinate = coordinate[0][0];
-        }
-        //const centroid = turf.centroid(geojson.features[i]);
-        //let latLng = L.latLng(centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]);
-        let latLng = L.latLng(coordinate[1], coordinate[0]);
-        let marker = L.marker(latLng,{pane:"markerClusterZIndex",opacity:0});
-        markerList.push(marker);
-        // 要素中心点wgs84
-        const center = latLng;
-        if (this.initCenter == null) this.initCenter = center;
+      let geometry = geojson.features[i].geometry;
+      let coordinate = null;
+      if (geometry.type === 'Polygon') {
+        coordinate = geometry.coordinates[0];
+        coordinate = coordinate[0];
+      } else if (geometry.type === 'MultiPolygon') {
+        coordinate = geometry.coordinates[0];
+        coordinate = coordinate[0][0];
+      }
+      //const centroid = turf.centroid(geojson.features[i]);
+      //let latLng = L.latLng(centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]);
+      let latLng = L.latLng(coordinate[1], coordinate[0]);
+      let marker = L.marker(latLng, { pane: 'markerClusterZIndex', opacity: 0 });
+      markerList.push(marker);
+      // 要素中心点wgs84
+      const center = latLng;
+      if (this.initCenter == null) this.initCenter = center;
     }
     clusterlayer.addLayers(markerList);
-
   }
 
-   /*
+  /*
    * 清空扰动图斑以及项目红线聚合图层
    */
   async clearClusterLayers(clusterlayer) {
@@ -1374,19 +1380,18 @@ export default class Map extends React.Component {
     if (zoom > config.pointClusterLevel) {
       //隐藏聚合效果
       me.hideClusterLayers();
-    }
-    else{
+    } else {
       //显示聚合效果
       me.showClusterLayers();
     }
   };
   /*
    * 监听地图点击事件
-  */
+   */
   onClickMap = e => {
     const me = this;
     // console.log('1596',me.isShowHighLight);
-    if(!me.isShowHighLight){
+    if (!me.isShowHighLight) {
       me.clearHighlight();
       me.isShowHighLight = false;
     }
@@ -1394,19 +1399,19 @@ export default class Map extends React.Component {
   /*
    * 隐藏扰动图斑以及项目红线聚合图层
    */
-  hideClusterLayers = () =>{
-    this.map.getPane("markerClusterZIndex").style.zIndex = 0;
+  hideClusterLayers = () => {
+    this.map.getPane('markerClusterZIndex').style.zIndex = 0;
   };
   /*
    * 显示扰动图斑以及项目红线聚合图层
    */
-  showClusterLayers = () =>{
-    this.map.getPane("markerClusterZIndex").style.zIndex = 800;
+  showClusterLayers = () => {
+    this.map.getPane('markerClusterZIndex').style.zIndex = 800;
   };
   /*
    * 矢量瓦片扰动图斑绘制函数
-  */
-  async loadSpotVectorLayer(layer,geojson,zIndex,layergroup) {
+   */
+  async loadSpotVectorLayer(layer, geojson, zIndex, layergroup) {
     const { HighLightType, isEdit } = layer;
     const me = this;
     let tepmLayer = layer;
@@ -1420,82 +1425,78 @@ export default class Map extends React.Component {
         return f.properties.QDNM;
       },
       maxZoom: config.mapDefault.maxZoom,
-      minZoom:config.mapDefault.minZoom,
-      zIndex:zIndex,
-      HighLightType:HighLightType,
-      isEdit:isEdit
+      minZoom: config.mapDefault.minZoom,
+      zIndex: zIndex,
+      HighLightType: HighLightType,
+      isEdit: isEdit,
     };
-    layer = L.vectorGrid.slicer(data, obj)
-      .on('click', function(e) {
+    layer = L.vectorGrid.slicer(data, obj).on('click', function(e) {
+      me.clearHighlight();
+      switch (layer.options.HighLightType) {
+        case 1:
+          me.unBoundSpotHighLightUnFinished = e.layer.properties.QDNM;
+          me.unBoundSpotVGLayerUnFinished = layer;
+          break;
+        case 2:
+          me.unBoundSpotHighLightFinished = e.layer.properties.QDNM;
+          me.unBoundSpotVGLayerFinished = layer;
+          break;
+        case 3:
+          me.selfBoundSpotHighLightUnFinished = e.layer.properties.QDNM;
+          me.selfBoundSpotVGLayerUnFinished = layer;
+          break;
+        case 4:
+          me.selfBoundSpotHighLightFinished = e.layer.properties.QDNM;
+          me.selfBoundSpotVGLayerFinished = layer;
+          break;
+        // case 5:
+        //   me.otherBoundSpotHighLight = e.layer.properties.QDNM;
+        //   me.otherBoundSpotVGLayer = layer;
+        //     break;
+      }
+      layer.setFeatureStyle(e.layer.properties.QDNM, highlightstyle);
+      //设置图层顺序
+      layer.setZIndex(10);
+      me.isShowHighLight = true;
 
-        me.clearHighlight();
-        switch(layer.options.HighLightType) {
-          case 1:
-            me.unBoundSpotHighLightUnFinished = e.layer.properties.QDNM;
-            me.unBoundSpotVGLayerUnFinished = layer;
-             break;
-          case 2:
-            me.unBoundSpotHighLightFinished = e.layer.properties.QDNM;
-            me.unBoundSpotVGLayerFinished = layer;
-             break;
-          case 3:
-            me.selfBoundSpotHighLightUnFinished = e.layer.properties.QDNM;
-            me.selfBoundSpotVGLayerUnFinished = layer;
-             break;
-          case 4:
-            me.selfBoundSpotHighLightFinished = e.layer.properties.QDNM;
-            me.selfBoundSpotVGLayerFinished = layer;
-              break;
-          // case 5:
-          //   me.otherBoundSpotHighLight = e.layer.properties.QDNM;
-          //   me.otherBoundSpotVGLayer = layer;
-          //     break;
+      layer.unbindPopup();
+      (async () => {
+        let id = e.layer.properties.ID;
+        const records = await querySpotMapById({ id: id });
+        if (records.length > 0) {
+          const elements = me.getSpotPopupContent(records[0], e.latlng, isEdit);
+          layer.bindPopup(elements[0]).openPopup(e.latlng);
         }
-        layer.setFeatureStyle(e.layer.properties.QDNM, highlightstyle);
-        //设置图层顺序
-        layer.setZIndex(10);
-        me.isShowHighLight = true;
-
-        layer.unbindPopup();
-        (async () => {
-          let id = e.layer.properties.ID;
-          const records = await querySpotMapById({ id: id });
-          if(records.length>0){
-            const elements = me.getSpotPopupContent(records[0],e.latlng,isEdit);
-            layer.bindPopup(elements[0]).openPopup(e.latlng);
-          }
-        })();
-
-    })
+      })();
+    });
     layer.on('popupclose', e => {
       if (e) {
         me.isShowHighLight = false;
       }
     });
     layergroup.removeLayer(tepmLayer).addLayer(layer);
-    switch(layer.options.HighLightType) {
+    switch (layer.options.HighLightType) {
       case 1:
         me.unBoundSpotVGLayerUnFinished = layer;
-         break;
+        break;
       case 2:
         me.unBoundSpotVGLayerFinished = layer;
-         break;
+        break;
       case 3:
         me.selfBoundSpotVGLayerUnFinished = layer;
-         break;
+        break;
       case 4:
         me.selfBoundSpotVGLayerFinished = layer;
-          break;
+        break;
       // case 5:
       //   me.otherBoundSpotVGLayer = layer;
       //     break;
     }
-
   }
   /*
    * 矢量瓦片扰动图斑获取点击内容函数
-  */
-  getSpotPopupContent(item,center,isEdit){
+   */
+  getSpotPopupContent(item, center, isEdit) {
     //console.log("item",item);
     const { toPopupItemStr } = this;
     // 获取百度坐标
@@ -1542,24 +1543,22 @@ export default class Map extends React.Component {
     });
 
     return elements;
-  };
+  }
   /*
    * 设置图斑的样式
    */
   getVectorStyles = (properties, zoom) => {
     var symbol = null;
     var style = properties['style'];
-    symbol =  style;
+    symbol = style;
     return symbol;
   };
   /*
    * 清空矢量瓦片点击高亮
-  */
-  clearHighlight = () =>
-  {
-
+   */
+  clearHighlight = () => {
     if (this.unBoundSpotHighLightUnFinished) {
-         this.unBoundSpotVGLayerUnFinished.resetFeatureStyle(this.unBoundSpotHighLightUnFinished);
+      this.unBoundSpotVGLayerUnFinished.resetFeatureStyle(this.unBoundSpotHighLightUnFinished);
     }
     this.unBoundSpotHighLightUnFinished = null;
 
@@ -1592,51 +1591,54 @@ export default class Map extends React.Component {
     //   this.otherProjectVGLayer.resetFeatureStyle(this.otherProjectHighLight);
     // }
     //this.otherProjectHighLight = null;
-
   };
 
   //查询数据源构造geojson
-  data2GeoJSON(items,type,layer) {
+  data2GeoJSON(items, type, layer) {
     const { style } = layer;
     let geojson = {};
     let item = null;
     try {
       geojson = {
-        type: "FeatureCollection",
-        features: [
-        ]
+        type: 'FeatureCollection',
+        features: [],
       };
       //构造geojson数据源
-      if(items.length>0){
-        for(let i=0;i<items.length;i++){
+      if (items.length > 0) {
+        for (let i = 0; i < items.length; i++) {
           item = items[i];
-          if(item.SHAPE){
+          if (item.SHAPE) {
             // console.log("item",item);
-            let properties = type === "spot" ? {
-              QDNM:item.QDNM, //图斑
-              PRNM:item.PRNM,
-              BYD:item.BYD,
-              ID:item.ID,
-              PRID:item.PRID,
-              style:style
-            } :
-						type === "project" ? {
-              PRID:item.SWC_P_ID, //项目红线
-              PRO_NAME:item.PRO_NAME,
-              SWC_P_ID:item.SWC_P_ID,
-              style:style
-            }:
-						type === "label" ? {
-              NAME:item.NAME, //标注点
-              ID:item.ID
-            } : {};
+            let properties =
+              type === 'spot'
+                ? {
+                    QDNM: item.QDNM, //图斑
+                    PRNM: item.PRNM,
+                    BYD: item.BYD,
+                    ID: item.ID,
+                    PRID: item.PRID,
+                    style: style,
+                  }
+                : type === 'project'
+                ? {
+                    PRID: item.SWC_P_ID, //项目红线
+                    PRO_NAME: item.PRO_NAME,
+                    SWC_P_ID: item.SWC_P_ID,
+                    style: style,
+                  }
+                : type === 'label'
+                ? {
+                    NAME: item.NAME, //标注点
+                    ID: item.ID,
+                  }
+                : {};
 
-            let obj = { "type":"Feature","properties":properties,"geometry":JSON.parse(item.SHAPE) };
+            let obj = { type: 'Feature', properties: properties, geometry: JSON.parse(item.SHAPE) };
             geojson.features.push(obj);
           }
         }
       }
-    }catch (e) {
+    } catch (e) {
       console.error(e, JSON.stringify(item));
     }
     return geojson;
@@ -1650,18 +1652,16 @@ export default class Map extends React.Component {
 
   // 高亮多个图斑
   highlightMultipleSpots = (records, flag) => {
-    if(flag){
+    if (flag) {
       this.highlightSpotList = [];
       if (Array.isArray(records)) {
         records.forEach(record => {
           this.highlightSpot(record);
         });
       }
-    }
-    else{
+    } else {
       this.clearHighlightSpots();
     }
-
   };
 
   //清空项目红线关联图斑高亮
@@ -1684,8 +1684,7 @@ export default class Map extends React.Component {
     //根据查询记录判断属于哪个图斑类型图层
     const layer = this.getSpotLayerByRecord(record);
     layer.setFeatureStyle(QDNM, relationHLightstyle);
-
-  };
+  }
 
   /*
    * 添加矢量瓦片项目红线
@@ -1707,7 +1706,7 @@ export default class Map extends React.Component {
       100,
       this.selfProjectmarkerCluster,
       this.selfProjectLayerGroup
-     );
+    );
     // console.timeEnd("本单位已监管项目");
 
     // 其他单位监管项目
@@ -1723,35 +1722,34 @@ export default class Map extends React.Component {
   }
 
   /*
-  * 添加矢量瓦片项目红线图形（查询条件、图斑图层）
-  */
-  async onAddVectorGridProjects(where, layer, zIndex,clusterlayer,layergroup) {
+   * 添加矢量瓦片项目红线图形（查询条件、图斑图层）
+   */
+  async onAddVectorGridProjects(where, layer, zIndex, clusterlayer, layergroup) {
     const items = await queryProjects({
       where,
       limit: 1000000,
       returnGeometry: true,
     });
     //查询数据源构造geojson
-    let geojson = this.data2GeoJSON(items,"project",layer);
+    let geojson = this.data2GeoJSON(items, 'project', layer);
     //console.log("geojson",geojson);
-    if(geojson){
+    if (geojson) {
       //加载项目红线聚合图层
-      await this.addClusterLayers(geojson,clusterlayer);
+      await this.addClusterLayers(geojson, clusterlayer);
       //加载项目红线矢量瓦片图层
-      await this.loadProjectVectorLayer(layer,geojson,zIndex,layergroup);
+      await this.loadProjectVectorLayer(layer, geojson, zIndex, layergroup);
     }
-
   }
 
   /*
    * 矢量瓦片扰动图斑绘制函数
-  */
-  async loadProjectVectorLayer(layer,geojson,zIndex,layergroup) {
+   */
+  async loadProjectVectorLayer(layer, geojson, zIndex, layergroup) {
     const me = this;
     const { addRelatedProject, cancle, highlightMultipleSpots } = this;
-    const { HighLightType,isEdit } = layer;
+    const { HighLightType, isEdit } = layer;
     //let tepmLayer = layer;
-    if(layer){
+    if (layer) {
       layergroup.removeLayer(layer);
     }
     let data = geojson;
@@ -1764,45 +1762,43 @@ export default class Map extends React.Component {
         return f.properties.PRID;
       },
       maxZoom: config.mapDefault.maxZoom,
-      minZoom:config.mapDefault.minZoom,
-      zIndex:zIndex,
-      HighLightType:HighLightType,
-      isEdit:isEdit
+      minZoom: config.mapDefault.minZoom,
+      zIndex: zIndex,
+      HighLightType: HighLightType,
+      isEdit: isEdit,
     };
-    layer = L.vectorGrid.slicer(data, obj)
-      .on('click', function(e) {
-        me.clearHighlight();
-        switch(layer.options.HighLightType) {
-          case 6:
-            me.selfProjectHighLight = e.layer.properties.PRID;
-            me.selfProjectVGLayer = layer;
-              break;
-          // case 7:
-          //   me.otherProjectHighLight = e.layer.properties.PRID;
-          //   me.otherProjectVGLayer = layer;
-          //     break;
+    layer = L.vectorGrid.slicer(data, obj).on('click', function(e) {
+      me.clearHighlight();
+      switch (layer.options.HighLightType) {
+        case 6:
+          me.selfProjectHighLight = e.layer.properties.PRID;
+          me.selfProjectVGLayer = layer;
+          break;
+        // case 7:
+        //   me.otherProjectHighLight = e.layer.properties.PRID;
+        //   me.otherProjectVGLayer = layer;
+        //     break;
+      }
+      layer.setFeatureStyle(e.layer.properties.PRID, highlightstyle);
+      //设置图层顺序
+      layer.setZIndex(10);
+      me.unBoundSpotVGLayerUnFinished.setZIndex(300);
+      me.unBoundSpotVGLayerFinished.setZIndex(400);
+      me.selfBoundSpotVGLayerUnFinished.setZIndex(500);
+      me.selfBoundSpotVGLayerFinished.setZIndex(600);
+      // me.otherBoundSpotVGLayer.setZIndex(700);
+      me.isShowHighLight = true;
+
+      layer.unbindPopup();
+      (async () => {
+        let PRID = e.layer.properties.SWC_P_ID;
+        const records = await queryProjectById({ id: PRID });
+        if (records.length > 0) {
+          const elements = me.getProjectPopupContent(records[0], e.latlng, isEdit);
+          layer.bindPopup(elements[0], { PRID: PRID }).openPopup(e.latlng);
         }
-        layer.setFeatureStyle(e.layer.properties.PRID, highlightstyle);
-        //设置图层顺序
-        layer.setZIndex(10);
-        me.unBoundSpotVGLayerUnFinished.setZIndex(300);
-        me.unBoundSpotVGLayerFinished.setZIndex(400);
-        me.selfBoundSpotVGLayerUnFinished.setZIndex(500);
-        me.selfBoundSpotVGLayerFinished.setZIndex(600);
-        // me.otherBoundSpotVGLayer.setZIndex(700);
-        me.isShowHighLight = true;
-
-        layer.unbindPopup();
-        (async () => {
-          let PRID = e.layer.properties.SWC_P_ID;
-          const records = await queryProjectById({ id: PRID });
-          if(records.length>0){
-            const elements = me.getProjectPopupContent(records[0],e.latlng,isEdit);
-            layer.bindPopup(elements[0],{PRID:PRID}).openPopup(e.latlng);
-          }
-        })();
-
-    })
+      })();
+    });
     // .addTo(map);
     layer.on('popupopen', e => {
       if (e) {
@@ -1846,10 +1842,9 @@ export default class Map extends React.Component {
     //     //console.log('2417',me.otherProjectVGLayer);
     //       break;
     // }
-
   }
 
-  getProjectPopupContent(item,center,isEdit){
+  getProjectPopupContent(item, center, isEdit) {
     const { toPopupItemStr } = this;
     // 获取百度坐标
     const latlng = wgs84toBd09LatLng(center);
@@ -1907,35 +1902,39 @@ export default class Map extends React.Component {
     });
 
     //查询数据源构造geojson
-    let geojson = this.data2GeoJSON(items,"label",this.labelPointLayer);
-    if(geojson){
-      await this.addLabelClusterLayers(geojson,this.labelPointLayer);
+    let geojson = this.data2GeoJSON(items, 'label', this.labelPointLayer);
+    if (geojson) {
+      await this.addLabelClusterLayers(geojson, this.labelPointLayer);
     }
-    this.labelPointLayer.on('click', function (e) {
+    this.labelPointLayer.on('click', function(e) {
       e.layer.unbindPopup();
-      const elements = me.getLabelPopupContent(e.layer,e.layer.options.properties,e.latlng);
+      const elements = me.getLabelPopupContent(e.layer, e.layer.options.properties, e.latlng);
       e.layer.bindPopup(elements[0]).openPopup(e.latlng);
     });
-
   }
 
   /*
    * 加载标注点聚合图层
    */
-  async addLabelClusterLayers(geojson,clusterlayer) {
+  async addLabelClusterLayers(geojson, clusterlayer) {
     let markerList = [];
     for (let i = 0; i < geojson.features.length; i++) {
-        let marker = L.marker(new L.LatLng(geojson.features[i].geometry.coordinates[1], geojson.features[i].geometry.coordinates[0]),{properties:geojson.features[i].properties});
-        markerList.push(marker);
+      let marker = L.marker(
+        new L.LatLng(
+          geojson.features[i].geometry.coordinates[1],
+          geojson.features[i].geometry.coordinates[0]
+        ),
+        { properties: geojson.features[i].properties }
+      );
+      markerList.push(marker);
     }
     clusterlayer.addLayers(markerList);
-
   }
 
   /*
    * 标注点单击内容函数
-  */
-  getLabelPopupContent(layer,item,center){
+   */
+  getLabelPopupContent(layer, item, center) {
     const { toPopupItemStr } = this;
     const {
       login: { user },
@@ -1999,15 +1998,14 @@ export default class Map extends React.Component {
       });
     });
     return elements;
-
   }
 
   // 添加单个标注点
   async addLabelPoint(item) {
     //查询数据源构造geojson
-    let geojson = this.data2GeoJSON([item],"label",this.labelPointLayer);
-    if(geojson){
-      await this.addLabelClusterLayers(geojson,this.labelPointLayer);
+    let geojson = this.data2GeoJSON([item], 'label', this.labelPointLayer);
+    if (geojson) {
+      await this.addLabelClusterLayers(geojson, this.labelPointLayer);
     }
   }
 
@@ -2038,11 +2036,7 @@ export default class Map extends React.Component {
 
     return (
       <div>
-        <NavBar
-          mode="dark"
-        >
-          地图
-        </NavBar>
+        <NavBar mode="dark">地图</NavBar>
         <NavContentContainer>
           <div id="map" />
         </NavContentContainer>
