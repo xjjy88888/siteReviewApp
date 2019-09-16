@@ -224,15 +224,6 @@ export default {
             type: 'refresh',
           });
 
-          //新增，刷新保存项目红线信息
-          yield put({
-            type: 'index/refreshProjects'
-          });
-          //新增，刷新扰动图斑信息
-          yield put({
-            type: 'index/refreshSpots'
-          });
-
           // 判断由于监管单位发生改变，是否需要刷新地图上绑定该项目的图斑
           const {
             project: { selected },
@@ -246,6 +237,15 @@ export default {
               payload: { records },
             });
           }
+
+          //新增，刷新扰动图斑信息
+          yield put({
+            type: 'index/refreshSpots'
+          });
+          //新增，刷新保存项目红线信息
+          yield put({
+            type: 'index/refreshProjects'
+          });
 
         } else {
           Toast.fail(message, 1);
