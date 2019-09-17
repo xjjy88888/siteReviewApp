@@ -27,6 +27,7 @@ export default class LabelPointEdit extends PureComponent {
   state = {
     photoIndex: 0,
     isOpen: false,
+    newId: guid(),
   };
 
   // 表单元素验证错误单击处理事件
@@ -65,6 +66,8 @@ export default class LabelPointEdit extends PureComponent {
       dispatch,
       login: { user },
     } = this.props;
+
+    const { newId } = this.state;
 
     const id = guid();
     // let fileEntry;
@@ -107,7 +110,7 @@ export default class LabelPointEdit extends PureComponent {
     // 添加
     const imageInfo = {
       ID: id,
-      RELATION_ID: this.selected.ID,
+      RELATION_ID: this.selected.ID || newId,
       TYPE: '水土流失风险照片截图',
       PATH: fileEntry.nativeURL,
       USER_ID: user.userId,
@@ -180,6 +183,9 @@ export default class LabelPointEdit extends PureComponent {
       login: { user },
       labelPoint: { imageInfos },
     } = this.props;
+
+    const { newId } = this.state;
+
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const editRecord = this.getEditRecord(values);
@@ -191,7 +197,7 @@ export default class LabelPointEdit extends PureComponent {
           const s = JSON.parse(this.selected.SHAPE);
           record = {
             ...editRecord,
-            ID: guid(),
+            ID: newId,
             SHAPE: JSON.stringify({ type: 'Point', coordinates: [s.x, s.y] }),
             MDID: user.dwid,
             CPID: user.userId,

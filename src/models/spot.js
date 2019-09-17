@@ -27,7 +27,7 @@ function* queryOnlineCounts({ call, select }) {
 
 // 根据id查询在线附件数量
 async function queryOnlineAttachmentsCount(id) {
-  const { data: items } = await queryAttachments({ id: id, soucre: 'spot' });
+  const { data: items } = await queryAttachments({ ...id, soucre: 'spot' });
   let count = 0;
   for (const key in items) {
     if ({}.hasOwnProperty.call(items, key)) {
@@ -335,9 +335,7 @@ export default {
           type: 'index/refreshMultipleSpots',
           payload: { records: [record] },
         });
-
-      }
-      else {
+      } else {
         Toast.fail(message, 1);
       }
     },
