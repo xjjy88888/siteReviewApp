@@ -247,41 +247,41 @@ const wgs84toBd09LatLng = latlng => {
 };
 
 // 获取当前位置
-export async function getCurrentPosition() {
-  return new Promise((resolve, reject) => {
-    if (navigator.geolocation) {
-      console.log("打开位置");
-      navigator.geolocation.getCurrentPosition(
-        res => {
-          console.log("定位成功：", res);
-          resolve(res.coords);
-        },
-        error => {
-          console.log("定位失败：", error);
-          resolve({});
-        }
-      );
-    } else {
-      console.log("未打开位置");
-      resolve({});
-    }
-  });
-}
 // export async function getCurrentPosition() {
 //   return new Promise((resolve, reject) => {
-//     // eslint-disable-next-line
-//     baidumap_location.getCurrentPosition(
-//       result => {
-//         console.log(JSON.stringify(result, null, 4));
-//         resolve(result);
-//       },
-//       error => {
-//         console.log(JSON.stringify(error, null, 4));
-//         reject(error);
-//       }
-//     );
+//     if (navigator.geolocation) {
+//       console.log("打开位置");
+//       navigator.geolocation.getCurrentPosition(
+//         res => {
+//           console.log("定位成功：", res);
+//           resolve(res.coords);
+//         },
+//         error => {
+//           console.log("定位失败：", error);
+//           resolve({});
+//         }
+//       );
+//     } else {
+//       console.log("未打开位置");
+//       resolve({});
+//     }
 //   });
 // }
+export async function getCurrentPosition() {
+  return new Promise((resolve, reject) => {
+    // eslint-disable-next-line
+    baidumap_location.getCurrentPosition(
+      result => {
+        console.log(JSON.stringify(result, null, 4));
+        resolve(result);
+      },
+      error => {
+        console.log(JSON.stringify(error, null, 4));
+        reject(error);
+      }
+    );
+  });
+}
 
 // 转化为树结构
 const toTreeData = data => {

@@ -820,14 +820,16 @@ export default class Map extends React.Component {
       console.log('定位');
       // eslint-disable-next-line
       getCurrentPosition().then(result => {
-        const { latitude, longitude } = result;
+        // const { latitude, longitude } = result;
+        const { radius, latitude, longitude } = result;
 
         // 绘制当前位置
         const latlng = gcj02toWgs84LatLng(L.latLng(latitude, longitude));
         locateLayer.clearLayers();
 
         // 画圆
-        L.circle(latlng, 150).addTo(locateLayer);
+        // L.circle(latlng, 150).addTo(locateLayer);
+        L.circle(latlng, radius).addTo(locateLayer);
 
         // 画点
         L.circle(latlng, {
