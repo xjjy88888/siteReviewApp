@@ -267,6 +267,7 @@ const wgs84toBd09LatLng = latlng => {
 //     }
 //   });
 // }
+
 export async function getCurrentPosition() {
   return new Promise((resolve, reject) => {
     // eslint-disable-next-line
