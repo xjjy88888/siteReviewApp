@@ -11,7 +11,7 @@ import bigInt from 'big-integer';
 // };
 
 const guid = () => {
-  const Snowflake = /** @class */ (function() {
+  const Snowflake = /** @class */ (function () {
     function Snowflake(_workerId, _dataCenterId, _sequence) {
       // this.twepoch = 1288834974657;
       this.twepoch = 0;
@@ -37,26 +37,26 @@ const guid = () => {
       if (this.dataCenterId > this.maxDataCenterId || this.dataCenterId < 0) {
         throw new Error(
           'config.data_center_id must max than 0 and small than maxDataCenterId-[' +
-            this.maxDataCenterId +
-            ']'
+          this.maxDataCenterId +
+          ']'
         );
       }
       this.workerId = _workerId;
       this.dataCenterId = _dataCenterId;
       this.sequence = _sequence;
     }
-    Snowflake.prototype.tilNextMillis = function(lastTimestamp) {
+    Snowflake.prototype.tilNextMillis = function (lastTimestamp) {
       var timestamp = this.timeGen();
       while (timestamp <= lastTimestamp) {
         timestamp = this.timeGen();
       }
       return timestamp;
     };
-    Snowflake.prototype.timeGen = function() {
+    Snowflake.prototype.timeGen = function () {
       //new Date().getTime() === Date.now()
       return Date.now();
     };
-    Snowflake.prototype.nextId = function() {
+    Snowflake.prototype.nextId = function () {
       var timestamp = this.timeGen();
       if (timestamp < this.lastTimestamp) {
         throw new Error(

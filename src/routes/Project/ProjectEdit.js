@@ -377,6 +377,7 @@ export default class ProjectEdit extends PureComponent {
     // 是否可编辑
     // const editable =
     //   selected.SUP_UNIT === user.dwid || selected.SUP_UNIT == null || selected.SWC_P_ID == null;
+   
     const editable = true;
 
     return (
