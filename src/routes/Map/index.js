@@ -91,6 +91,9 @@ const SPOT_FILL_COLOR = 'rgba(255,255,0,0.4)';
 const PROJECT_FILL_COLOR = 'rgba(230,0,0,0.4)';
 const BORDER_WIDTH = 3;
 const DASH_ARRAY = '5';
+const DISTRICT_FILL_COLOR = "rgba(230,0,0,0)";
+// const DISTRICT_COLOR = '#bfbfbf';
+const DISTRICT_COLOR = "#0070FF";
 
 //矢量瓦片高亮样式符号style
 const highlightstyle = {
@@ -227,7 +230,7 @@ export default class Map extends React.Component {
   // 创建图层
   // eslint-disable-next-line
   createLayers = () => {
-    const { offlineBasemap, onlineBasemaps } = config;
+    const { offlineBasemap, onlineBasemaps,tdtImageLabel,districtBound } = config;
 
     // 离线底图
     if (isCordova()) {
@@ -241,6 +244,7 @@ export default class Map extends React.Component {
           folder: offlineBasemap.folder,
           name: offlineBasemap.name,
           debug: offlineBasemap.debug,
+          errorTileUrl:offlineBasemap.errorTileUrl
           //subdomains: offlineBasemap.subdomains
         },
         () => myOfflineImageLayer.goOffline()
@@ -249,9 +253,9 @@ export default class Map extends React.Component {
     } else {
       // 自己发布的影像瓦片图层（使用在线地图模拟离线地图）
       const myOfflineImageLayer = L.tileLayer(`${offlineBasemap.url}/tile/{z}/{y}/{x}`, {
-        // const myOfflineImageLayer = L.tileLayer(`${offlineBasemap.url}`, {
         minZoom: offlineBasemap.minZoom,
         maxZoom: offlineBasemap.maxZoom,
+        errorTileUrl:offlineBasemap.errorTileUrl
         // subdomains: offlineBasemap.subdomains
       });
       this.myOfflineImageLayer = myOfflineImageLayer;
@@ -259,20 +263,33 @@ export default class Map extends React.Component {
 
     // 在线底图
     this.onlineBasemapLayers = onlineBasemaps.map(item => {
-      // return L.tileLayer(`${item.url}/tile/{z}/{y}/{x}`, {
-      //   minZoom: item.minZoom,
-      //   maxZoom: item.maxZoom,
-      // });
       return L.tileLayer(`${item.url}`, {
         minZoom: item.minZoom,
         maxZoom: item.maxZoom,
         subdomains: item.subdomains,
+        errorTileUrl:item.errorTileUrl
       });
     });
 
     // 定位图层
     const locateLayer = L.layerGroup([]);
     this.locateLayer = locateLayer;
+
+    //基础地图数据
+    //天地图地图标注图层
+    const placeNameImageLayer = L.tileLayer(`${tdtImageLabel.url}`, {
+      minZoom: tdtImageLabel.minZoom,
+      maxZoom: tdtImageLabel.maxZoom,
+      subdomains: tdtImageLabel.subdomains
+    });
+    this.placeNameImageLayer = placeNameImageLayer;
+    const districtBoundLayer = L.tileLayer.wms(districtBound.url + "/wms?", {
+      layers: districtBound.mapDistrictLayerName, //需要加载的图层
+      format: "image/png", //返回的数据格式
+      transparent: true,
+      maxZoom: districtBound.maxZoom
+    });
+    this.districtBoundLayer = districtBoundLayer;   
 
     // 标注点
     this.labelPointLayer = L.markerClusterGroup({
@@ -735,14 +752,22 @@ export default class Map extends React.Component {
       //otherBoundSpotLayerGroup,
       selfProjectLayerGroup,
       //otherProjectLayerGroup
+      placeNameImageLayer,
+      districtBoundLayer
     } = this;
-    const { offlineBasemap, onlineBasemaps } = config;
+    const { offlineBasemap, onlineBasemaps,tdtImageLabel,districtBound } = config;
 
     // 构建图层标题及图例
-    const getTitle = (text, borderColor, fillColor, isBorderDashed) => {
-      return `<i style='display:inline-block;border:${
-        isBorderDashed ? 'dashed' : 'solid'
-      } 2px ${borderColor};background:${fillColor};width:20px;height:20px;position:relative;top:4px;'></i><span style='padding-left:1px;'>${text}</span>`;
+    const getTitle = (text, borderColor, fillColor, isBorderDashed,className) => {
+      if (className) {
+        return `<i style='display:inline-block;border:${
+          isBorderDashed ? "dashed" : "solid"
+          } 2px ${borderColor};background:${fillColor};width:20px;height:20px;position:relative;top:4px;'></i><span style='padding-left:1px;'>${text}</span><div class='${className}'></div>`;
+      } else {
+        return `<i style='display:inline-block;border:${
+          isBorderDashed ? "dashed" : "solid"
+          } 2px ${borderColor};background:${fillColor};width:20px;height:20px;position:relative;top:4px;'></i><span style='padding-left:1px;'>${text}</span>`;
+      }
     };
 
     // 构建图片形式的标题及图例
@@ -751,10 +776,6 @@ export default class Map extends React.Component {
     };
     // 底图图层
     const baseMaps = {};
-    // baseMaps[offlineBasemap.title] = myOfflineImageLayer;
-    // onlineBasemaps.forEach((item, i) => {
-    //   baseMaps[item.title] = onlineBasemapLayers[i];
-    // });
     baseMaps[getImageTitle(offlineBasemap.title, offlineBasemap.picUrl)] = myOfflineImageLayer;
     onlineBasemaps.forEach((item, i) => {
       baseMaps[getImageTitle(item.title, item.picUrl)] = onlineBasemapLayers[i];
@@ -762,6 +783,17 @@ export default class Map extends React.Component {
 
     // 专题图层
     const overlayMaps = {
+      [getImageTitle(
+        tdtImageLabel.title,
+        tdtImageLabel.picUrl
+      )]: placeNameImageLayer,
+      [getTitle(
+        districtBound.title,
+        DISTRICT_COLOR,
+        DISTRICT_FILL_COLOR,
+        true,
+        "overlayMapsTile"
+      )]: districtBoundLayer,
       [getTitle(
         '扰动图斑_未关联_未复核',
         UNFINISHED_SPOT_COLOR,
