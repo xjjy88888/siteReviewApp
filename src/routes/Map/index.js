@@ -874,7 +874,7 @@ export default class Map extends React.Component {
         // 平移至当前位置
         map.setView(latlng, 17);
       });
-    }).addTo(map);
+    }).addTo(map).setPosition('topleft');
   };
 
   // 获取图标文本按钮html
